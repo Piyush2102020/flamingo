@@ -1,0 +1,32 @@
+.navbar {
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+     padding: 0px var(--padding-large);
+    gap: var(--gap-small);
+}
+
+.nav-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   padding: var(--padding-medium);
+    border-radius: var(--radius-medium); 
+}
+
+.nav-item.active {
+    background-color: var(--color-element);
+}
+
+.nav-item.active svg {
+    stroke: var(--flamingo);
+}
+
+.nav-item svg {
+    width: var(--icon-medium);
+    height: var(--icon-medium);
+}
+
+.nav-item:active {
+    transform: scale(0.9);
+}

@@ -1,0 +1,7 @@
+.header{
+    padding: var(--padding-medium);
+}
+
+.header .appname{
+    font-size: 3rem;
+}

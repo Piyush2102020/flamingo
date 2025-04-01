@@ -1,0 +1,187 @@
+/* Root Theme Variables */
+:root {
+    --color-background: white;
+    --color-element: rgb(237, 237, 237);
+    --color-text: black;
+    --color-text-light: color-mix(in srgb, var(--color-text) 50%, transparent);
+    --shadow: 0px 10px 10px rgba(0, 0, 0, 0.262);
+    --color-text-on-accent: white;
+
+    --flamingo: #bb4160;
+    --flamingo-dark: #8B2E3F;
+    --flamingo-darker: #67202B;
+
+    /* Spacing (Padding, Margin, Gap) */
+    --padding-small: 4px;
+    --padding-medium: 12px;
+    --padding-large: 20px;
+    --padding-extra-large: 28px;
+
+    --margin-small: 4px;
+    --margin-medium: 12px;
+    --margin-large: 20px;
+    --margin-extra-large: 28px;
+
+    --gap-small: 4px;
+    --gap-medium: 12px;
+    --gap-large: 20px;
+
+    --radius-small: 4px;
+    --radius-medium: 12px;
+    --radius-large: 20px;
+
+    /* Font Sizes */
+    --font-small: 12px;
+    --font-medium: 16px;
+    --font-large: 20px;
+    --font-extra-large: 24px;
+
+    --icon-small: 24px;
+    --icon-medium: 28px;
+    --icon-large: 32px;
+}
+
+/* Dark Mode Variables */
+:root {
+    --color-background: black;
+    --color-element: transparent;
+    --color-text: white;
+    --color-text-light: color-mix(in srgb, var(--color-text) 50%, transparent);
+    --color-accent: rgb(103, 5, 48);
+    --shadow: rgb(115, 115, 115);
+    --color-comment-box:rgb(36, 36, 36);
+}
+
+@font-face {
+    font-family: AppFont;
+    src: url('/fonts/Inter-Italic-VariableFont_opsz\,wght.ttf');
+}
+
+@font-face {
+    font-family: OutFit;
+    src: url('/fonts/Outfit-VariableFont_wght.ttf');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    transition: 0.3s ease-in-out;
+    font-family: OutFit;
+    box-sizing: border-box;
+    pointer-events: auto; 
+    user-select: none; 
+    color: var(--color-text);
+}
+
+
+
+
+body {
+    background-color: var(--color-background);
+}
+
+
+
+
+.input{
+    padding: var(--padding-small);
+    background: transparent;
+    outline: none;
+    width: 100%;
+    border: none;
+    border-bottom:1px solid currentColor;
+}
+
+.input:focus{
+    border-color: var(--flamingo);
+}
+
+.input::placeholder{
+    font-style: italic;
+}
+
+
+
+
+.btn{
+    padding: var(--padding-medium);
+    border-radius: var(--radius-small);
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    width: 100%;
+}
+
+.btn:hover{
+    transform: scale(1.05);
+    box-shadow: 0px 5px 10px var(--shadow);
+}
+
+.btn:active{
+    transform: scale(1);
+}
+
+.accent{
+    background-color: var(--flamingo);
+}
+
+.dp-small{
+    width: var(--icon-medium);
+    height: var(--icon-medium);
+}
+
+.dp-large{
+    width: 80px;
+    height: 80px;
+}
+
+.text-normal{
+    font-size: 12px;
+    display: flex;
+    gap: var(--gap-small);
+    align-items: baseline;
+    text-wrap: wrap;
+}
+.text-bold{
+    font-size: 14px;
+    flex-wrap: 1;
+    width: fit-content;
+    display: flex;
+    gap: var(--gap-medium);
+    justify-content: center;
+}
+
+.text-light{
+    font-size: 12px;
+    color: var(--color-text-light);
+}
+
+::-webkit-scrollbar {
+    width: 8px; 
+    height: 8px; 
+}
+
+
+/* Default Toast */
+.Toastify__toast {
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    background: var(--color-element);
+    color: var(--color-text);
+    width: fit-content;
+    fill: #d04e6f;
+}
+
+.Toastify__toast-icon svg {
+    fill: #A63D57 !important;
+}
+
+.Toastify__close-button {
+    margin-left: auto;
+}
+
+.Toastify__progress-bar {
+    background: var(--flamingo);
+}

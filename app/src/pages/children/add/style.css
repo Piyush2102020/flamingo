@@ -1,0 +1,96 @@
+.editable-box {
+    width: 100%;
+    min-height: 150px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    outline: none;
+    position: relative;
+  }
+  
+
+  .editable-box.empty::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #aaa;
+    pointer-events: none;
+    font-size: 16px;
+  }
+
+  
+
+
+
+  select{
+    background-color: var(--color-element);
+  }
+
+  .post-header button{
+    width: 20%;
+    margin-left: 0 auto;
+  }
+
+  .post-page{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-medium);
+  }
+  .media-selection{
+    display: flex;
+    align-items: center;
+    gap: var(--gap-medium);
+  }
+
+  .spinner{
+     border-radius: var(--radius-medium);
+     padding: var(--padding-medium);
+     z-index: 100;
+  }
+  .icons{
+    width: 40px;
+    height: 40px;
+  }
+
+  .file-picker{
+    opacity: 0;
+    position: absolute;
+  }
+
+  .image-preview-container{
+    width: fit-content;
+    border: 2px solid gray;
+    border-radius: var(--radius-medium);
+    padding: var(--padding-medium);
+    background-color: rgb(216, 216, 216);
+    align-self: center;
+  }
+
+  .image-preview{
+    height: 400px;
+    object-fit: contain;
+  }
+
+  .cancel-button{
+    background-color: rgba(128, 128, 128, 0.495);
+    position: absolute;
+    text-align: center;
+    width: 30px;
+    border-radius: 50%;
+    height: 30px;
+  }
+
+
+
+  .post-button{
+    
+    border-radius: var(--radius-medium);
+    background-color: rgb(75, 75, 255);
+    color: white;
+    font-weight: bold;
+    width: 8%;
+    margin-left: auto;
+    padding:0px;
+  }

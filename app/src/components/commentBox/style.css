@@ -1,0 +1,41 @@
+.comment-box-container {
+    width: 100%;
+    z-index: 100;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    flex-direction:column;
+}
+
+.overlay {
+    height: 30%;
+    background:transparent;
+}
+
+.comment-box {
+    border-radius: var(--radius-large) var(--radius-large) 0px 0px;
+    flex-grow: 1;
+    padding: var(--padding-large);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-comment-box);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-input{
+    width: 60%;
+    gap: var(--gap-large);
+    display: flex;
+}
+
+.comments-container{
+    height: 400px;
+    width: 70%;
+    overflow-y: scroll;
+}
+
+
+.comment-input .btn{
+    width: 20%;
+}

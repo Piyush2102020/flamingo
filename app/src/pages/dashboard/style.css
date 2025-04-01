@@ -1,0 +1,19 @@
+.dashboard-container{
+    position: relative;
+    height: 100vh;
+}
+.dashboard-section{
+    height: 88vh;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.outlet-container{
+    flex-grow: 1;
+    padding: var(--padding-medium);
+    border-left:2px solid var(--color-element);
+    height: 100%;
+    overflow-y: scroll;
+}

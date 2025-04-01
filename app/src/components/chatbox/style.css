@@ -1,0 +1,15 @@
+.chatbox-container{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.chats{
+    height: 600px;
+    overflow-y: scroll;
+}
+
+
+.chat-input-container{
+    display: flex;
+}
