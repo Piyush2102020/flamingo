@@ -9,12 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addData } from "../../helpers/slice";
 import { RootState } from "../../helpers/store";
 import CommentBox from "../../components/commentBox/file";
+import startSocket from "../../helpers/socketServer";
 export default function Dashboard() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const commentBoxVisibility=useSelector((state:RootState)=>state.context.comment.isVisible);
-
+    
 
     
     useEffect(() => {
@@ -25,8 +26,8 @@ export default function Dashboard() {
         const token = localStorage.getItem('token');
         if (token) {
             const data = jwtDecode(token);
-            dispatch(addData(data))
-
+            dispatch(addData(data));
+            const socket=startSocket();
         }
 
     }, [])

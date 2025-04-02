@@ -20,7 +20,11 @@ exports.Interact=async(req,res,next)=>{
                 
             }else if(type=='dislike'){
                 await PostModel.findByIdAndUpdate(id,{$pull:{likes:req.user._id}});
-           
+            }
+            else if(type=='save'){
+
+            }else if(type=='remove'){
+                
             }
             response(res,"Interacted") 
         }

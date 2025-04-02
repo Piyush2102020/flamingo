@@ -1,11 +1,10 @@
-.chatbox-container{
-    height: 100%;
+.chat-container{
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
+    height: 100%;
 }
+
 .chats{
-    height: 600px;
     overflow-y: scroll;
 }
 

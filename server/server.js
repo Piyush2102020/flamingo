@@ -3,9 +3,12 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./routes/routes"); 
 const { connectDb } = require("./db/db");
-
-
 const app = express();
+const {initSocket}=require('./helpers/sockets');
+const http=require('http');
+
+
+const httpServer=http.createServer(app);
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
@@ -15,12 +18,19 @@ const startServer = async () => {
     const isConnected = await connectDb();
 
     if (isConnected) {
-        app.listen(process.env.PORT, () => {
-            console.log("🚀 Server running successfully");
-        });
+        initSocket(httpServer);
+
+
+        httpServer.listen(process.env.PORT,()=>{
+            console.log("Server Succesfully running");
+        })
+
     } else {
         process.exit(1);
     }
 };
+
+
+
 
 startServer();

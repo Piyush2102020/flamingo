@@ -16,9 +16,12 @@ interface HeaderProps {
 
   export default function GenericHeader({profilePic,username,content,timestamp,redirectUrl,clickMode,icons="hidden",style={}}:HeaderProps){
 
+  
+    console.log("PP : ",profilePic);
     
     const navigate=useNavigate();
   function handleClick(){
+    
     navigate(redirectUrl);  
 }
 

@@ -36,7 +36,7 @@ exports.MakePost = async (req, res, next) => {
 
             streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
         } else {
-            // Create post without media
+    
             const newPost = new PostModel({
                 userId: req.user._id,
                 ...req.body

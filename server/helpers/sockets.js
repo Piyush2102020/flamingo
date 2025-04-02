@@ -1,24 +1,40 @@
 const {Server}=require('socket.io');
-
 let io;
-const Users=new Map();
 
 
-const createSocket=(server)=>{
-    io=new Server(server,{cors:{origin:"*",methods:["GET","POST"]}})
+const user=[];
+
+exports.initSocket=(server)=>{
+    io=new Server(server,{cors:{origin:"*"},methods:["GET","POST"]});
+    
 
     io.on('connection',(socket)=>{
-        console.log("A User Connected : ",socket.id);
+        console.log("User Connected : ",socket.id);
+        user.push(socket);
 
-        socket.on("registerUser",(userId)=>{
-            Users.set(userId,socket.id);
+        socket.on('register',(userId)=>{
+            console.log("User Registered with : ",socket.id);
+            user.push(socket);
         })
 
-
-        socket.on('disconnect',(userId)=>{
-            console.log("User Disconnect : ",userId);
+        socket.on('disconnect',()=>{
+            console.log("Client disconnected : ",socket.id);
+            
         })
-    })
+        
+    });
+
 }
 
-module.exports={createSocket};
+
+
+
+exports.sendAlert=()=>{
+  if(user){
+    user.forEach((value)=>{
+        console.log("Sending message to : ",value);
+        
+        value.emit('message',{message:"here is the message"})
+    })
+  }
+}

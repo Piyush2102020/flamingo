@@ -8,12 +8,12 @@ export default function Chat(){
     const fetchChats=async()=>{
         
         const allChats=await axiosInstance.get('/chatbox') as any;
-        console.log("items",allChats.chatBoxItems);
-        setChats(allChats.chatBoxItems)
+        console.log("items",allChats.chats);
+        setChats(allChats.chats)
     }
     useEffect(()=>{
         fetchChats();
-    },[])
+    },[]);
     
     return(
         <div className="chatbox">
@@ -22,11 +22,11 @@ export default function Chat(){
   <GenericHeader
     key={index}
     clickMode="header"
-    profilePic={value.userData.profilePic}
+    profilePic={value.profilePic}
     content="Last Message"
     timestamp=""
-    username={value.userData.username}
-    redirectUrl={`/dashboard/chatbox?c=${value.userData.username}-${value.userData._id}-${value._id}`}
+    username={value.username}
+    redirectUrl={`/dashboard/chatbox?user=${value.username}-${value._id}`}
     style={{
       background: "var(--color-element)",
       padding: "var(--padding-medium)",

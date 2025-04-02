@@ -5,10 +5,11 @@ import "./style.css";
 interface LoaderProps<T> {
   url: string;
   Element?: React.FC<{ item: any }>;
-  style?:CSSProperties
+  style?:CSSProperties,
+  onNewItem?: (addItemFunc: (newItem: T) => void) => void;
 }
 
-export default function GenericLoader<T>({ url, Element ,style}: LoaderProps<T>) {
+export default function GenericLoader<T>({ url, Element ,style,onNewItem}: LoaderProps<T>) {
   const [items, setItems] = useState<T[]>([]);
   const [page, setPage] = useState(1);
   const [isFetching, setIsFetching] = useState(false);
@@ -22,7 +23,7 @@ export default function GenericLoader<T>({ url, Element ,style}: LoaderProps<T>)
     if (chatBoxRef.current) {
         chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
     }
-}, [items]); // Trigger only when new messages are added
+}, [items]); 
 
   useEffect(() => {
     setItems([]);
@@ -70,6 +71,20 @@ export default function GenericLoader<T>({ url, Element ,style}: LoaderProps<T>)
     },
     [isFetching, hasMore]
   );
+
+
+
+  const addNewItem = (newItem: T) => {
+    setItems((prev) => [newItem, ...prev]); 
+  };
+  
+  useEffect(() => {
+    if (onNewItem) {
+      onNewItem(addNewItem);
+    }
+  }, [onNewItem]);
+
+
 
   useEffect(() => {
     if (!hasMore || !observerRef.current) return;

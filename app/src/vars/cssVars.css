@@ -128,11 +128,13 @@ body {
 .dp-small{
     width: var(--icon-medium);
     height: var(--icon-medium);
+    border-radius: 50%;
 }
 
 .dp-large{
     width: 80px;
     height: 80px;
+    border-radius: 50%;
 }
 
 .text-normal{
