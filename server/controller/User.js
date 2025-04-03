@@ -5,7 +5,7 @@ const STATUS_CODES = require("../helpers/status_code");
 const cloudinary=require("../helpers/cloudinary");
 const { response } = require("../helpers/functions");
 const streamifier=require('streamifier');
-
+const {Notify}=require('../helpers/sockets');
 
 exports.searchUser = async (req, res, next) => {
     const { username } = req.params;
@@ -55,7 +55,6 @@ exports.userInfo = async (req, res, next) => {
             }
         ]);
 
-        console.log("User : ",user);
         
         if (!user.length) {
             throw new ApiError(STATUS_CODES.NOT_FOUND, "User Not Found")
@@ -110,11 +109,12 @@ exports.updateProfile = async (req, res, next) => {
 exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action}=req.query;
-    console.log(action);
-    
     if(action==='follow'){
-        await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id}});
+
+        const notification={type:"follow",referenceId:req.user._id}
+        await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
         await UserModel.findByIdAndUpdate(req.user._id,{$push:{following:id}});
+        Notify(id,"normal");  
         response(res,"acknowledged");
     }else{
         await UserModel.findByIdAndUpdate(id,{$pull:{followers:req.user._id}});
@@ -166,7 +166,15 @@ exports.getAccData=async(req,res,next)=>{
         response(res,"acknowledged",(users[0])[matchField]);
     }else{
         response(res,"acknowledged")
-    }
+    } 
+}
 
-  
+exports.Notifications=async(req,res,next)=>{
+    const notification=await UserModel.findById(req.user._id,{notifications:1});
+    if(notification){
+        response(res,"acknowledged",notification.notifications);
+    }else{
+        response(res,"acknowledged",null);
+    }
+ 
 }

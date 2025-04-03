@@ -21,7 +21,7 @@ const startServer = async () => {
         initSocket(httpServer);
 
 
-        httpServer.listen(process.env.PORT,()=>{
+        httpServer.listen(process.env.PORT,"0.0.0.0",()=>{
             console.log("Server Succesfully running");
         })
 

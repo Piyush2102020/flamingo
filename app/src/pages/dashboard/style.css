@@ -1,6 +1,7 @@
 .dashboard-container{
     position: relative;
     height: 100vh;
+    width: 100vw;
 }
 .dashboard-section{
     height: 88vh;
@@ -17,3 +18,4 @@
     height: 100%;
     overflow-y: scroll;
 }
+

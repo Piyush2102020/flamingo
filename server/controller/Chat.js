@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const {response}=require('../helpers/functions');
 const { ChatModel, Message } = require('../models/ChatModels');
 const UserModel = require('../models/UserModel');
+const {Notify}=require('../helpers/sockets');
 
 
 exports.sendMessage=async(req,res,next)=>{
@@ -15,6 +16,7 @@ exports.sendMessage=async(req,res,next)=>{
         await newMessage.save();
         if(chatboxId && mongoose.isValidObjectId(chatboxId)){
             await ChatModel.findByIdAndUpdate(chatboxId,{$push:{messages:newMessage._id}});
+            Notify(req.body.receiverId,'message');
             response(res,"Chat Added Succesfully");
             return;
 
@@ -31,6 +33,8 @@ exports.sendMessage=async(req,res,next)=>{
             });            
             
         }
+
+        Notify(req.body.receiverId,'message');
         response(res,"New Chatbox Created",chatboxId._id);
 
 

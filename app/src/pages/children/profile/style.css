@@ -1,9 +1,9 @@
 .profile-page{
-    padding: var(--padding-large);
+    padding: var(--padding-small);
     display: flex;
     flex-direction: column;
     gap: var(--gap-large);
-    margin: var(--margin-large);
+ 
 }
 
 
@@ -30,7 +30,7 @@
 .button-holder{
     display: flex;
     gap: var(--gap-large);
-    width: 50%;
+    width: 80%;
 }
 
 .normal{
@@ -38,9 +38,7 @@
     background:var(--color-element);
 }
 
-.profile-mid{
-    width: 70%;
-}
+
 .profile-details{
     width: fit-content;
 }

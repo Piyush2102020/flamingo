@@ -32,4 +32,10 @@
 }
 
 
+@media (max-width:768px) {
+    .auth-form{
+        height: 100%;
+        width: 90%;
+    }
+}
 

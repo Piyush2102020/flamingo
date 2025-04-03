@@ -28,3 +28,15 @@
     flex-direction: column;
     display: flex;
 }
+
+@media (max-width:400px) {
+    .input-field{
+        width: 80%;
+    }
+    .input-field:hover{
+        width: 90%;
+    }
+    .enlarge{
+        width: 100%;
+    }    
+}

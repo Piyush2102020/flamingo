@@ -7,7 +7,7 @@ const multer = require('multer');
 const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
-const { userInfo, searchUser, updateProfile, profileInteraction, getAccData } = require('../controller/User');
+const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications } = require('../controller/User');
 const { getMessages, sendMessage, getAllChat, getChatId } = require('../controller/Chat');
 
 // Multer Setup (Memory Storage for Uploads)
@@ -34,7 +34,7 @@ routes.get('/user/:id', userInfo);
 routes.get('/search/:username', searchUser);
 routes.route('/profile/:id').get(getAccData).put(profileInteraction);
 routes.post('/update', upload.single('image'), updateProfile);
-
+routes.get('/notification',Notifications)
 
 /// 🔹 **Post Routes**
 routes.route('/content').get(RetrievePost).post(upload.single('image'), MakePost);

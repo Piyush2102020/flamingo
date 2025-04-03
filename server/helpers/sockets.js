@@ -2,39 +2,37 @@ const {Server}=require('socket.io');
 let io;
 
 
-const user=[];
+const userMap=new Map();
 
 exports.initSocket=(server)=>{
     io=new Server(server,{cors:{origin:"*"},methods:["GET","POST"]});
     
-
     io.on('connection',(socket)=>{
         console.log("User Connected : ",socket.id);
-        user.push(socket);
-
         socket.on('register',(userId)=>{
             console.log("User Registered with : ",socket.id);
-            user.push(socket);
+            userMap.set(userId,socket);
         })
 
         socket.on('disconnect',()=>{
             console.log("Client disconnected : ",socket.id);
-            
+            userMap.delete(socket.id);
         })
         
     });
-
 }
 
 
-
-
-exports.sendAlert=()=>{
-  if(user){
-    user.forEach((value)=>{
-        console.log("Sending message to : ",value);
+exports.Notify=async(userId,type)=>{    
+    const user=userMap.get(userId)
+    console.log("User Id : ",userId,type);
+    
+    if(user){
+        console.log("user: ",userId);
         
-        value.emit('message',{message:"here is the message"})
-    })
-  }
+        user.emit('notification',{type:type});
+    }else{
+        console.log("User Offline with id : ",user);
+           
+    }
 }
