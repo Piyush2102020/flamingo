@@ -4,7 +4,7 @@ const errHandler = require('../middleware/errHandler');
 const validator = require('../middleware/validator');
 const multer = require('multer');
 
-const { Auth } = require('../controller/Auth');
+const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
 const { userInfo, searchUser, updateProfile, profileInteraction, getAccData } = require('../controller/User');
@@ -14,11 +14,20 @@ const { getMessages, sendMessage, getAllChat, getChatId } = require('../controll
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
 
+
+
+
+/// 🔹 **Auth Routes*
+routes.post('/auth/:type', Auth);
+routes.post('/reset',resetPassword);
+routes.post('/changepassword',ChangePassword)
+
+
 // Middleware for Validation
 routes.use(validator);
 
-/// 🔹 **Auth Routes**
-routes.post('/auth/:type', Auth);
+
+
 
 /// 🔹 **User Routes**
 routes.get('/user/:id', userInfo);

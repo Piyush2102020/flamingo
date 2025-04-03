@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import './style.css';
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -22,6 +23,9 @@ export default function Auth() {
         username: "",
         password: ""
     });
+
+
+    const navigate=useNavigate();
 
     const handleChange = (element: React.ChangeEvent<HTMLInputElement>) => {
         setData({ ...formData, [element.target.name]: element.target.value });
@@ -83,8 +87,10 @@ export default function Auth() {
                 
                 <button className="btn accent" onClick={handleSubmit}>{isLogin ? "Login" : "Create Account"}</button>
                 <p onClick={() => setIsLogin(!isLogin)}>
-                    {isLogin ? "No Account? Click here to create one" : "Already have an account? Login here"}
+                    {isLogin ? "No Account? Click here to create one" : "Already have an account? Login here"}<br/>
+                    
                 </p>
+                {isLogin&& <span onClick={()=>{navigate('/auth/forgetpassword')}} className="text-light" style={{alignSelf:"flex-end"}}>Forgot Password?</span>}
             </div>
         </div>
     );

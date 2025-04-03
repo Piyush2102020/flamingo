@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
     followers: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     following: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     postCount: { type: Number, default: 0 },
-    chats: [{ userId: { type: mongoose.Types.ObjectId, ref: "User" }, chatboxId: { type: mongoose.Types.ObjectId, ref: "Chats" } }]
+    chats: [{ userId: { type: mongoose.Types.ObjectId, ref: "User" }, chatboxId: { type: mongoose.Types.ObjectId, ref: "Chats" } }],
+    resetPasswordToken:{type:String,default:null},
+    resetPasswordExpire:{type:Date,default:null}
 }, { timestamps: true });
 
 userSchema.index({ "chats.userId": 1 });

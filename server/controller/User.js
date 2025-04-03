@@ -126,16 +126,22 @@ exports.profileInteraction=async( req,res,next)=>{
 
 
 exports.getAccData=async(req,res,next)=>{
+
     const {id}=req.params;
-    const {type}=req.query;
+    const {type,page}=req.query;
     let matchField="followers";
+
+    let limit=5;
+    let currentPage=Number(page)||1;
+    let skipCount=(currentPage-1)*limit;
     if(type=='followers'){
         matchField="followers";
     }else{
         matchField="following";
     }
 
-
+    console.log("Page : ",page);
+    
     const users=await UserModel.aggregate([
         {$match:{_id:new mongoose.Types.ObjectId(id)}},
         {$project:{[matchField]:1}},
@@ -145,7 +151,9 @@ exports.getAccData=async(req,res,next)=>{
             foreignField:"_id",
             as:matchField,
             pipeline:[
-                {$project:{
+                {$skip:skipCount},
+                {$limit:limit},{
+                    $project:{
                     _id:1,
                     name:1,
                     username:1,
@@ -155,9 +163,9 @@ exports.getAccData=async(req,res,next)=>{
         }}
     ]);
     if(users){
-        response(res,"acknowledged",users[0]);
+        response(res,"acknowledged",(users[0])[matchField]);
     }else{
-        response(res,"acknowledged",[])
+        response(res,"acknowledged")
     }
 
   

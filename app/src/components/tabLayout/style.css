@@ -1,0 +1,29 @@
+.tab-layout{
+    height: 100%;
+    gap: var(--gap-large);
+    display: flex;
+    flex-direction: column;
+}
+
+
+.tabs{
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+
+.tab-item{
+    width: 30%;
+    text-align: center;
+    padding: var(--padding-medium);
+}
+
+.tab-item-active{
+    border-bottom: 2px solid var(--flamingo);
+}
+
+.tab-viewport{
+flex-grow: 1;
+overflow-y: scroll;
+}

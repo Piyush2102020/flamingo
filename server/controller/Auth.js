@@ -2,7 +2,9 @@ const mongoose = require('mongoose');
 const UserModel = require('../models/UserModel');
 const ApiError = require('../helpers/ApiError');
 const STATUS_CODES = require('../helpers/status_code');
-const { hashPassword, response, generateToken, matchPassword } = require('../helpers/functions');
+const { hashPassword, response, generateToken, matchPassword} = require('../helpers/functions');
+const {eventEmitter}=require('../helpers/email');
+const crypto=require('crypto');
 
 
 
@@ -73,3 +75,64 @@ exports.Auth = async (req, res, next) => {
         next(e);
     }
 };
+
+
+exports.resetPassword = async (req, res, next) => {
+    const { email } = req.body;
+
+    try {
+  
+        const user = await UserModel.findOne({ email: email });
+
+        if (!user) {
+            return response(res, "Email is not registered");
+        }
+
+    
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpire = Date.now() + 3600000; 
+
+  
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpire = resetTokenExpire;
+        await user.save();
+
+        const resetLink = `http://localhost:5173/auth/forgetpassword?token=${resetToken}`;
+
+        await eventEmitter.emit('reset',user.email,resetLink);
+
+        return response(res, "Please check your email for further instructions");
+    } catch (e) {
+        next(e);
+    }
+};
+
+
+exports.ChangePassword=async(req,res,next)=>{
+
+    try{
+        const {token,password}=req.body;
+        console.log(token);
+        
+        
+
+        const user=await UserModel.findOne({resetPasswordToken:token});
+        console.log(user);
+        
+    
+        if(user){
+            user.resetPasswordToken=null;
+            user.resetPasswordExpire=null;
+            const newHashPassword=await hashPassword(password);
+            user.password=newHashPassword;
+            await user.save();
+            response(res,"Your password is changed please login");
+        }
+        else{
+            throw new ApiError(STATUS_CODES.BAD_REQUEST,"Token Expired");
+        }
+    }catch(e){
+        next(e);
+    }
+   
+}

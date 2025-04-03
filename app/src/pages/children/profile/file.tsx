@@ -46,8 +46,8 @@ export default function Profile() {
                 <strong>@{profileData.username}</strong>
                 <div className='meta'>
                     <span><strong>{profileData.postCount}</strong> Posts</span>
-                    <span><strong>{profileData.followersCount}</strong> Followers</span>
-                    <span><strong>{profileData.followingCount}</strong> Following</span>
+                    <span><strong onClick={()=>navigate(`/dashboard/info?user=${profileData._id}&type=followers`)}>{profileData.followersCount}</strong> Followers</span>
+                    <span><strong onClick={()=>navigate(`/dashboard/info?user=${profileData._id}&type=following`)}>{profileData.followingCount}</strong> Following</span>
                 </div>
                 
                 
