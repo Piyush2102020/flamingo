@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import './style.css'
 import axiosInstance from '../../../helpers/axiosModified';
 import GenericHeader from '../../../components/GenericHeader/file';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function Search(){
     const [query,setQuery]=useState('');
     const [user,setUsers]=useState<[any]>([{}]);
-
+    const navigate=useNavigate();
 
     const search=async()=>{
         setUsers([{}])
@@ -44,7 +45,7 @@ export default function Search(){
                         borderRadius:"var(--radius-medium)",
                         padding:"var(--padding-medium)"
                     }} username={value.username} clickMode='header'
-                    content='' profilePic={value.profilePicture}timestamp='' redirectUrl={`/dashboard/profile?user=${value.username}-${value._id}`}/>)
+                    content='' profilePic={value.profilePicture}timestamp='' onClick={()=>navigate(`/dashboard/profile?user=${value.username}-${value._id}`)}/>)
                 }
             </div>
         </div>

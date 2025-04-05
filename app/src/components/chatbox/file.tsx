@@ -18,12 +18,10 @@ export default function ChatHandler() {
 
 
     const loadChatBoxId = async () => {
-        console.log("Searching for chatbox with id :", userId);
-
         if (userId) {
             const responseChatId = await axiosInstance.get(`/chatboxid?id=${userId}`) as any;
             setChatBoxId(responseChatId);
-            console.log("Chatbox Id : ", responseChatId);
+
 
         }
     }

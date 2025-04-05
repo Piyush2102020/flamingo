@@ -56,7 +56,7 @@ exports.RetrievePost = async (req, res, next) => {
     try {
         let limit = 2;
         const { page = 1, uid, type } = req.query;
-        console.log("Paging:", page, "UID:", uid);
+       
         let filter = {};
         if (type === 'feed' && !uid) {
             filter = {};
@@ -93,7 +93,7 @@ exports.RetrievePost = async (req, res, next) => {
             { $project: { likes: 0, comments: 0, updatedAt: 0, __v: 0,userId:0} }
         ]);
 
-        console.log("Posts:", posts);
+      
         response(res, "acknowledged", posts);
     }
     catch (e) {
@@ -117,6 +117,7 @@ exports.AddComment = async (req, res, next) => {
 
 
 
+
 exports.GetComments = async (req, res, next) => {
     console.log("Get comments triggered");
     
@@ -125,16 +126,15 @@ exports.GetComments = async (req, res, next) => {
     const currentPage = Number(req.query.page) || 1;
     console.log(postId,parentId,currentPage);
     
-    let limit = 2;
+    let limit = 20;
     let skipCount = (currentPage - 1) * limit;
-    let filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )}] } }
+    let filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )},{parentId:null}] } }
     try {
         if(parentId){
             if(mongoose.isValidObjectId(parentId)){
                 filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )}, 
                     { parentId:new mongoose.Types.ObjectId( parentId)}] } }         
             }
-       
         }
 
         const comments = await CommentModel.aggregate([

@@ -2,51 +2,17 @@ const { default: mongoose } = require('mongoose');
 const {response}=require('../helpers/functions');
 const { ChatModel, Message } = require('../models/ChatModels');
 const UserModel = require('../models/UserModel');
-const {Notify}=require('../helpers/sockets');
 
 
-exports.sendMessage=async(req,res,next)=>{
-
-    try{
-
-        let chatboxId=req.query.id;
-        console.log("send Chatbox ID : ",chatboxId);
-        
-        const newMessage=new Message(req.body);
-        await newMessage.save();
-        if(chatboxId && mongoose.isValidObjectId(chatboxId)){
-            await ChatModel.findByIdAndUpdate(chatboxId,{$push:{messages:newMessage._id}});
-            Notify(req.body.receiverId,'message');
-            response(res,"Chat Added Succesfully");
-            return;
-
-        }else{
-            chatboxId=new ChatModel({users:[req.user._id,req.body.receiverId],messages:[newMessage._id]});
-            await chatboxId.save();
-            console.log("New Chatbox Id",chatboxId._id);
-            await UserModel.findByIdAndUpdate(req.user._id, {
-                $push: { chats: { userId: req.body.receiverId, chatboxId: chatboxId._id } }
-            });
-            
-            await UserModel.findByIdAndUpdate(req.body.receiverId, {
-                $push: { chats: { userId: req.user._id, chatboxId: chatboxId._id } }
-            });            
-            
-        }
-
-        Notify(req.body.receiverId,'message');
-        response(res,"New Chatbox Created",chatboxId._id);
 
 
-    }catch(e){
-        next(e);
-    }
-  
-}
+
 
 exports.getChatId = async (req, res, next) => {
     try {
         const uid = req.query.id;
+        console.log("Searching for : ",uid);
+        
 
         const userChatBox = await UserModel.findById(req.user._id, { chats: 1 }).lean();
 
@@ -66,50 +32,10 @@ exports.getChatId = async (req, res, next) => {
     }
 };
 
-exports.getMessages=async (req,res,next)=>{
-
-    const {id,page}=req.query;
-    let limit=2;
-    let currentPage=Number(page)||1;
-    let skipCount=(currentPage-1)*limit;
-
-
-    const messages=await ChatModel.aggregate(
-        [
-            {$match:{_id:new  mongoose.Types.ObjectId(id)}},
-            {$lookup:{
-                from:"messages",
-                localField:"messages",
-                foreignField:"_id",
-                as:"messages",
-                pipeline:[
-                    {$sort:{createdAt:1}},
-                    {$skip:skipCount},
-                    {$limit:limit},
-                    {$project:{
-                        text:1,
-                        receiverId:1
-                    }}
-                ]
-            }},{$project:{createdAt:0,
-                updatedAt:0,
-                __v:0
-            }}
-        ]
-    );
-    
-    if(messages){
-        response(res,"acknowledged",(messages[0]).messages)
-    }else{
-response(res,"acknowleged")
-    }
-    
-}
 
 
 exports.getAllChat=async (req,res,next)=>{
-    console.log("Getting Chats");
-    
+   
     const UserChatBox=await UserModel.aggregate([
         {$match:{_id:new mongoose.Types.ObjectId(req.user._id)}},
         {$lookup:{
@@ -127,7 +53,61 @@ exports.getAllChat=async (req,res,next)=>{
             ]
         }}
     ]);
-    console.log(UserChatBox);
+    
     
     response(res,"acknowledged",UserChatBox[0])
+}
+
+
+exports.loadChat=async(req,res,next)=>{
+    const {id}=req.query;
+
+    if(mongoose.isValidObjectId(id)){
+        const chats=await ChatModel.aggregate([
+            {$match:{_id:new mongoose.Types.ObjectId(id)}},{$lookup:{
+                from:"messages",
+                localField:"messages",
+                foreignField:"_id",
+                as:"messages",
+                pipeline:[
+                    {$project:{_id:1,
+                        text:1
+                    }}
+                ]
+    
+            }}
+        ]);
+        if(chats.length>0){
+            response(res,"acknowledged",(chats[0]).messages)
+    
+        }else{
+            response(res,"acknowledged",[]);
+        }
+    
+    }
+    else{
+        response(res,"acknowledged")
+    }    
+   
+}
+
+exports.addMessage=async(data)=>{
+    const {newMessageNotify}=await require('../helpers/sockets');
+    const newMessage=new Message({receiverId:data.receiverId,text:data.message});
+    await newMessage.save()
+
+    if(mongoose.isValidObjectId(data.chatboxId)){
+        console.log("ADding to old chat",data.chatboxId);
+        await ChatModel.findByIdAndUpdate(data.chatboxId,{$push:{messages:newMessage._id}});
+        newMessageNotify(newMessage.toObject(),data.senderId,data.receiverId,data.chatboxId);
+        return;
+    }
+    else{
+        const newChatbox=new ChatModel({users:[data.senderId,data.receiverId],messages:[newMessage._id]});
+        await newChatbox.save()
+        await UserModel.findByIdAndUpdate(data.senderId,{$push:{chats:{userId:data.receiverId,chatboxId:newChatbox._id}}})
+        await UserModel.findByIdAndUpdate(data.receiverId,{$push:{chats:{userId:data.senderId,chatboxId:newChatbox._id}}})
+        newMessageNotify(newMessage.toObject(),data.senderId,data.receiverId,newChatbox._id);
+        return;
+    }
 }

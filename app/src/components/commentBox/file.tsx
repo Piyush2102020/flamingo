@@ -1,45 +1,62 @@
 
 import { useDispatch, useSelector } from 'react-redux'
 import './style.css'
-import { toggleCommentBox } from '../../helpers/slice';
+import { addComments, changeCommentInput, changeParentId, setCommentBoxHint, toggleCommentBox } from '../../helpers/slice';
 import GenericLoader from '../GenericLoader/file';
 import { RootState } from '../../helpers/store';
-import axios from 'axios';
 import axiosInstance from '../../helpers/axiosModified';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentLayout from '../comment-layout/file';
 
 export default function CommentBox() {
-    const disptach=useDispatch();
-
-    const [comment,setComment]=useState("");
-    const commentBoxState=useSelector((state:RootState)=>state.context.comment);
-    const postId=commentBoxState.postId;
+  const disptach = useDispatch();
+  const commentBoxState = useSelector((state: RootState) => state.context.comment);
+  const postId = commentBoxState.postId;
 
 
-    const addComment=async()=>{
-      console.log("Adding comment to post : ",postId);
-      axiosInstance.post(`/content/${postId}/comments`,{content:comment})    
+  const loadComments = async () => {
+    const comments = await axiosInstance.get(`/content/${postId}/comments`) as [];
+    if (comments) {
+      disptach(addComments(comments));
     }
-
-    return (
-      <div className="comment-box-container">
-        <div onClick={()=>disptach(toggleCommentBox())} className="overlay"></div>
+  }
 
 
 
 
-        <div className='comment-box'>
+  useEffect(() => {
+    loadComments();
+  }, [])
 
-            <h1>Comments</h1>
-            <div className='comments-container'>
-              <GenericLoader url={`/content/${postId}/comments?`} Element={CommentLayout}/>
-            </div>
-            <div className='comment-input'>
-                <input className='input' onChange={(event)=>setComment(event.target.value)} value={comment} placeholder='Write a comment'/>
-                <button className='btn accent' onClick={addComment}>Add Comment</button>
-            </div>
+  const addComment = async () => {
+  
+    axiosInstance.post(`/content/${postId}/comments/${commentBoxState.parentId}`, { content: commentBoxState.input });
+  }
+
+  return (
+    <div className="comment-box-container">
+      <div onClick={() => disptach(toggleCommentBox())} className="overlay"></div>
+
+      <div className='comment-box'>
+
+        <h1>Comments</h1>
+        <div className='comments-container'>
+          {commentBoxState.comments.length > 0 && commentBoxState.comments.map((value: any) => <CommentLayout onClick={() => {
+            disptach(setCommentBoxHint(`Replying to @${value.userData.username}`));
+            disptach(changeCommentInput(`@${value.userData.username}`));
+            disptach(changeParentId(value.parentId ? value.parentId : value._id));
+          }} item={value} />)}
+        </div>
+
+        <div style={{width:'80%'}}>
+          {commentBoxState.hint && <h2 className='text-light'>{commentBoxState.hint}</h2>}
+          <div className='comment-input'>
+            <input className='input' onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
+            <button className='btn accent' onClick={addComment}>Add Comment</button>
+          </div>
+
         </div>
       </div>
-    )
+    </div>
+  )
 }

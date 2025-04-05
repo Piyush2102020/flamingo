@@ -36,11 +36,10 @@ export default function GenericLoader<T>({ url, Element ,style,onNewItem}: Loade
 
     setIsFetching(true);
     try {
-      console.log("Fetching page:", page ,"Url : ",url);
+
       const response = await axiosInstance.get(`${url}&page=${page}`);
       const data = response 
-      console.log("Response : ",response);
-      
+    
       if (!data || data.length === 0) {
         setHasMore(false);
       } else {

@@ -1,29 +1,38 @@
-import { useDispatch } from "react-redux";
 import { io } from "socket.io-client";
-import { toggleMessage, toggleNotification } from "./slice";
-import React from "react";
+import { addMessage, toggleMessage, toggleNotification } from "./slice";
 import { Dispatch } from "redux";
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
+import { useEffect } from "react";
 
-const socketUrl='http://localhost:5000';
+const socketUrl = 'http://192.168.1.7:5000';
+const socket=io(socketUrl);
 export default function startSocket(dispatch:Dispatch){
-
-    const socket=io(socketUrl);
+    const userData=useSelector((state:RootState)=>state.context.userData._id);
+    
     socket.on('connect',()=>{
         console.log("Socket Connect with id : ",socket.id);
     })
-
+    
 
     socket.on('notification',(data)=>{
-        console.log("Data ",data);
-        
+
         if(data.type=='normal'){
             dispatch(toggleNotification());
         }else{
             dispatch(toggleMessage());
         }
-    })
+    });
 
+    useEffect(()=>{
+        if(userData){
+            socket.emit('register',userData)
+        }
+    },[userData]);
 
+    return socket;
+}
 
+export const getSocket=()=>{
     return socket;
 }

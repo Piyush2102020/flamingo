@@ -8,7 +8,7 @@ const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
 const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications } = require('../controller/User');
-const { getMessages, sendMessage, getAllChat, getChatId } = require('../controller/Chat');
+const { getMessages, sendMessage, getAllChat, getChatId, loadChat } = require('../controller/Chat');
 
 // Multer Setup (Memory Storage for Uploads)
 const storage = multer.memoryStorage(); 
@@ -42,9 +42,9 @@ routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddCo
 routes.post('/content/:id', Interact);
 
 /// 🔹 **Chat Routes**
-routes.route('/chat').get(getMessages).post(sendMessage);
 routes.get('/chatbox', getAllChat);
 routes.get('/chatboxid', getChatId);
+routes.get('/loadchat',loadChat)
 
 // Global Error Handler
 routes.use(errHandler);

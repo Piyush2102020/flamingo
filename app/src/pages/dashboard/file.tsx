@@ -16,6 +16,8 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const commentBoxVisibility=useSelector((state:RootState)=>state.context.comment.isVisible);
     const isMobile=useSelector((state:RootState)=>state.context.isMobile);
+    const socket=startSocket(dispatch);
+    let currentUser;
     Responsive();
     useEffect(() => {
         if (!window.location.pathname.includes('home')) {
@@ -25,11 +27,8 @@ export default function Dashboard() {
         if (token) {
             const data = jwtDecode(token);
             dispatch(addData(data));
-            const socket=startSocket(dispatch);
-            socket.emit('register',data._id);
         }
-
-    }, [])
+        }, []);
 
 
     return (

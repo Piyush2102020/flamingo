@@ -1,4 +1,5 @@
 const {Server}=require('socket.io');
+const { addMessage } = require('../controller/Chat');
 let io;
 
 
@@ -14,21 +15,50 @@ exports.initSocket=(server)=>{
             userMap.set(userId,socket);
         })
 
-        socket.on('disconnect',()=>{
-            console.log("Client disconnected : ",socket.id);
-            userMap.delete(socket.id);
+
+        socket.on('message',async(data)=>{
+            console.log("Data Received : ",data);
+            addMessage(data);            
         })
+
+        socket.on('disconnect', () => {
+            console.log("Client disconnected : ", socket.id);
+            if (socket.userId) {
+                userMap.delete(socket.userId);  // ✅ this will work
+            }
+        });
+        
         
     });
 }
 
+
+
+
+exports.newMessageNotify=async(newMessage,senderId,receiverId,chatboxId)=>{
+    const sender=userMap.get(senderId);
+    const receiver=userMap.get(receiverId);
+  
+    
+    console.log(chatboxId,senderId,receiverId);
+    
+    if(sender){
+         
+        sender.emit('newMessage',{message:newMessage,id:chatboxId});
+          
+    }
+    if(receiver){
+  
+        receiver.emit('newMessage',{message:newMessage,id:chatboxId});
+    }
+}
 
 exports.Notify=async(userId,type)=>{    
     const user=userMap.get(userId)
     console.log("User Id : ",userId,type);
     
     if(user){
-        console.log("user: ",userId);
+  
         
         user.emit('notification',{type:type});
     }else{

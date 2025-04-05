@@ -1,11 +1,12 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import './style.css'
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../helpers/store';
 import GenericLoader from '../../../components/GenericLoader/file';
 import axiosInstance from '../../../helpers/axiosModified';
 import PostComponent from '../../../components/postComponent/file';
+import { updateChatboxMeta } from '../../../helpers/slice';
 
 export default function Profile() {
     const [params] = useSearchParams();
@@ -15,11 +16,12 @@ export default function Profile() {
     const [profileData, setProfileData] = useState<any>({});
     const userData = useSelector((state: RootState) => state.context.userData) as any;
     const isOwnProfile = userData._id === userId;
+    const dispatch=useDispatch();
 
     const navigate = useNavigate();
 
     const fetchUserData = async (userId: string) => {
-        console.log("Searching for : ", userId);
+
         const response = await axiosInstance.get(`/user/${userId}`);
         console.log(response);
 
@@ -76,21 +78,22 @@ export default function Profile() {
                     </button>
 
                     <button onClick={() => {
-                        navigate(`/dashboard/chatbox?user=${profileData.username}-${profileData._id}`)
+                        dispatch(updateChatboxMeta(
+                            { receiverUsername:profileData.username,
+                                receiverId:profileData._id,
+                                receiverDp:profileData.profilePicture,
+                            chatboxId:null,messages:[]}
+                        ))
+                        navigate('/dashboard/chatbox');
                     }} className='btn normal'>Message</button>
                 </div>
             }
             <div className='profile-mid'>
-
-
                 {
                     profileData._id &&
                     <GenericLoader url={`/content?uid=${profileData._id}&type=user`} Element={PostComponent} />
                 }
             </div>
-
-
-
         </div>
     )
 }

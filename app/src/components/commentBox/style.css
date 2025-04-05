@@ -21,10 +21,12 @@
     background-color: var(--color-comment-box);
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .comment-input{
-    width: 60%;
+ 
+    width: 100%;
     gap: var(--gap-large);
     display: flex;
 }

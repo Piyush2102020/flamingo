@@ -63,12 +63,12 @@ export default function Navbar({style}:{style:CSSProperties}) {
 
 
             <div
-                className={`nav-item ${context.newMessage?"glow":" "} ${selectedTab === "chat" ? "active" : ""}`}
+                className={`nav-item ${context.newMessage?"glow":" "} ${selectedTab === "direct" ? "active" : ""}`}
                 onClick={() =>{ 
                     if(context.newMessage){
                         dispatch(toggleMessage())
                     }
-                    ;handleSelection("chat")}}
+                    ;handleSelection("direct")}}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M80 134.87 170.26 214a8 8 0 0 0 13.09-4.21L224 33.22a1 1 0 0 0-1.34-1.15L20 111.38a6.23 6.23 0 0 0 1 11.92Zm44.37 38.91-30.61 31.76A8 8 0 0 1 80 200v-65.13" />
@@ -83,7 +83,7 @@ export default function Navbar({style}:{style:CSSProperties}) {
                         dispatch(toggleNotification())
                     }
                     setSelectedTab("notification");
-                    navigate(`/dashboard/notifications?user=${userData.username}-${userData._id}`)
+                    navigate(`/dashboard/notification?user=${userData.username}-${userData._id}`)
                 }}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
