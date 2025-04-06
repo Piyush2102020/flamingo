@@ -9,6 +9,7 @@ const { RetrievePost, MakePost, GetComments, AddComment } = require('../controll
 const { Interact } = require('../controller/interaction');
 const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications } = require('../controller/User');
 const { getMessages, sendMessage, getAllChat, getChatId, loadChat } = require('../controller/Chat');
+const { SearchMusic } = require('../controller/music');
 
 // Multer Setup (Memory Storage for Uploads)
 const storage = multer.memoryStorage(); 
@@ -46,6 +47,8 @@ routes.get('/chatbox', getAllChat);
 routes.get('/chatboxid', getChatId);
 routes.get('/loadchat',loadChat)
 
+
+routes.get('/music',SearchMusic)
 // Global Error Handler
 routes.use(errHandler);
 

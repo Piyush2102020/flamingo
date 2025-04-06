@@ -16,8 +16,6 @@ export default function RealtimeChatBox() {
 
     const loadChat=async()=>{
         const response=await axiosInstance.get(`/loadchat?id=${chatBoxContext.chatboxId}`);
-        console.log("Loaded chats : ",response);
-
         dispatch(addMessage(response));
     }
 
