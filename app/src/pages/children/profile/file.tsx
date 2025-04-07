@@ -54,7 +54,8 @@ export default function Profile() {
 
 
                 </div>
-
+                {profileData._id===userData._id&&
+                <button onClick={()=>{navigate('/dashboard/settings')}}>Settings</button>}
                
 
             </div>

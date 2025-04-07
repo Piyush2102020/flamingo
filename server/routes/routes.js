@@ -7,8 +7,8 @@ const multer = require('multer');
 const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
-const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications } = require('../controller/User');
-const { getMessages, sendMessage, getAllChat, getChatId, loadChat } = require('../controller/Chat');
+const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications, updateProfilePicture } = require('../controller/User');
+const { getMessages, sendMessage, getAllChat, getChatId, loadChat, LoadInbox } = require('../controller/Chat');
 const { SearchMusic } = require('../controller/music');
 
 // Multer Setup (Memory Storage for Uploads)
@@ -34,7 +34,8 @@ routes.use(validator);
 routes.get('/user/:id', userInfo);
 routes.get('/search/:username', searchUser);
 routes.route('/profile/:id').get(getAccData).put(profileInteraction);
-routes.post('/update', upload.single('image'), updateProfile);
+routes.post('/updateprofile', updateProfile);
+routes.post('/updateprofilepicture',upload.single('image'), updateProfilePicture);
 routes.get('/notification',Notifications)
 
 /// 🔹 **Post Routes**
@@ -43,9 +44,7 @@ routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddCo
 routes.post('/content/:id', Interact);
 
 /// 🔹 **Chat Routes**
-routes.get('/chatbox', getAllChat);
-routes.get('/chatboxid', getChatId);
-routes.get('/loadchat',loadChat)
+routes.route('/chat').get(LoadInbox);
 
 
 routes.get('/music',SearchMusic)

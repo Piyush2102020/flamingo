@@ -10,6 +10,10 @@ const crypto=require('crypto');
 
 
 exports.Auth = async (req, res, next) => {
+    console.log("Login request");
+    console.log(req.body);
+    
+    
     try {
         const {type}=req.params;
 

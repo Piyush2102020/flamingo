@@ -14,14 +14,14 @@ app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(routes);
 
+
+console.log("Port : ",process.env.PORT);
+
 const startServer = async () => {
     const isConnected = await connectDb();
-
     if (isConnected) {
         initSocket(httpServer);
-
-
-        httpServer.listen(process.env.PORT,"0.0.0.0",()=>{
+        httpServer.listen(process.env.PORT,()=>{
             console.log("Server Succesfully running");
         })
 

@@ -158,6 +158,14 @@ body {
     color: var(--color-text-light);
 }
 
+.text-accent{
+    font-size: 16px;
+    color: var(--flamingo);
+    padding: var(--padding-small);
+    border-bottom: 1px solid var(--flamingo);
+    width: fit-content;
+    font-weight: bold;
+}
 ::-webkit-scrollbar {
     width: 8px; 
     height: 8px; 

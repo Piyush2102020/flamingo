@@ -14,6 +14,7 @@ import Pnf from "../components/pnf/file";
 import Forgetpassword from "../pages/passwordReset/file";
 import Notifications from "../pages/children/notification/file";
 import RealtimeChatBox from "../components/realtimeChatbox/file";
+import Settings from "../pages/children/account_settings/file";
 
 export default function Routes() {
     const routes = useRoutes([
@@ -40,7 +41,8 @@ export default function Routes() {
                 { path: "profile", element: <Profile /> },
                 { path: "chatbox", element: <RealtimeChatBox/> },
                 { path: "info", element: <TabLayout /> },
-                { path: "notification" ,element:<Notifications/>}
+                { path: "notification" ,element:<Notifications/>},
+                {path:"settings",element:<Settings/>},
             ]
         },
         { path: '/*', element: <Pnf text="Uh-oh! Even our flamingo can’t find this one" /> }

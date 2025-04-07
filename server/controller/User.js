@@ -3,7 +3,7 @@ const UserModel = require("../models/UserModel");
 const ApiError = require("../helpers/ApiError");
 const STATUS_CODES = require("../helpers/status_code");
 const cloudinary=require("../helpers/cloudinary");
-const { response } = require("../helpers/functions");
+const { response, generateToken } = require("../helpers/functions");
 const streamifier=require('streamifier');
 const {Notify}=require('../helpers/sockets');
 
@@ -70,38 +70,44 @@ exports.userInfo = async (req, res, next) => {
 
 
 exports.updateProfile = async (req, res, next) => {
-    try {
-        let imageUrl = "";
-
-        if (req.file) {
-            imageUrl = await new Promise((resolve, reject) => {
-                const upload_stream = cloudinary.uploader.upload_stream(
-                    { folder: "flamingo/dp" },
-                    (error, result) => {
-                        if (error) reject(error);
-                        else resolve(result.secure_url);
-                    }
-                );
-                streamifier.createReadStream(req.file.buffer).pipe(upload_stream);
-            });
-        }
-
-        const updateData = {};
-        Object.keys(req.body).forEach((key) => {
-            if (req.body[key]) updateData[key] = req.body[key]; 
-        });
-
-        if (imageUrl) updateData.profilePicture = imageUrl;
-
-        const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, { $set: updateData }, { new: true });
-
-        return res.status(200).json({ message: "Profile updated successfully!", user: updatedUser });
-
-    } catch (e) {
-        console.error("Error updating profile:", e);
-        return res.status(500).json({ message: "Something went wrong!" });
+    try{
+        const checkUsername=await UserModel.findOne({username:req.body.username},{username:1});
+        if (checkUsername && checkUsername._id!=req.user._id)  throw new ApiError(STATUS_CODES.CONFLICT,"Username not available");
+        const newData=(await UserModel.findByIdAndUpdate(req.user._id,{$set:req.body},{new:true})).toObject();
+        delete newData.password;
+        const jwtToken=await generateToken(newData);
+        response(res,"acknowledged",{token:jwtToken,newData:newData});
+    }   catch(e){
+        next(e);
     }
 };
+
+
+exports.updateProfilePicture=async (req,res,next)=>{
+    try{
+        let link='';
+
+        const upload_strean=cloudinary.uploader.upload_stream(
+            {folder:"/flamingo/profile"},
+            async(error,result)=>{
+                if(error){
+                    return next(error)
+                }
+                link=await result.secure_url;
+       
+                
+
+                await UserModel.findByIdAndUpdate(req.user._id,{$set:{profilePicture:link}});
+                response(res,"acknowledged",{link:link})
+            }
+        );
+
+        streamifier.createReadStream(req.file.buffer).pipe(upload_strean);
+
+    }catch(e){
+        next(e);
+    }
+}
 
 
 
