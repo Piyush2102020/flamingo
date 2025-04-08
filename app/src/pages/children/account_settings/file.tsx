@@ -95,8 +95,8 @@ export default function Settings() {
                         <input
                             name="gender"
                             type="radio"
-                            value="Male"
-                            checked={localData.gender === "Male"}
+                            value="male"
+                            checked={localData.gender === "male"}
                             onChange={(e) => setLocalData({ ...localData, gender: e.target.value })}
                         />
                         Male
@@ -106,8 +106,8 @@ export default function Settings() {
                         <input
                             name="gender"
                             type="radio"
-                            value="Female"
-                            checked={localData.gender === "Female"}
+                            value="female"
+                            checked={localData.gender === "female"}
                             onChange={(e) => setLocalData({ ...localData, gender: e.target.value })}
                         />
                         Female
@@ -117,8 +117,8 @@ export default function Settings() {
                         <input
                             name="gender"
                             type="radio"
-                            value="Not-specified"
-                            checked={localData.gender === "Not-specified"}
+                            value="not-specified"
+                            checked={localData.gender === "not-specified"}
                             onChange={(e) => setLocalData({ ...localData, gender: e.target.value })}
                         />
                         Not-specified

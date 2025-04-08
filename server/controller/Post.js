@@ -56,7 +56,8 @@ exports.RetrievePost = async (req, res, next) => {
     try {
         let limit = 2;
         const { page = 1, uid, type } = req.query;
-       
+        console.log(req.query);
+        
         let filter = {};
         if (type === 'feed' && !uid) {
             filter = {};
