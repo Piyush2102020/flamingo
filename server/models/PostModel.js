@@ -1,5 +1,27 @@
 const mongoose = require('mongoose');
 
+
+/**
+ * Post Model
+ *
+ * Defines the schema for user posts.
+ *
+ * Fields:
+ * - userId: ID of the user who created the post (indexed)
+ * - content: text content of the post
+ * - media: optional media URL associated with the post
+ * - likes: array of user IDs who liked the post (indexed)
+ * - tags: array of category or topic tags for discovery (indexed)
+ * - visibility: who can see the post — public, private, or friends (indexed)
+ *
+ * Virtuals:
+ * - likeCount: dynamically calculates the number of likes
+ *
+ * Custom JSON Serialization:
+ * - Excludes `likes` field by default unless `includeLikes` option is true.
+ *
+ * Automatically adds createdAt and updatedAt timestamps.
+ */
 const postSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true }, 
     content: { type: String,default:''}, 

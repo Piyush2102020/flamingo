@@ -1,3 +1,7 @@
+/**
+ * Custom API Error class extending the native Error object.
+ * Used to provide structured error handling in API responses.
+ */
 class ApiError extends Error {
     constructor(status, message, data = null) {
         super(message); 

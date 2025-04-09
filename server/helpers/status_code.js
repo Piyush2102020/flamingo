@@ -1,3 +1,10 @@
+/**
+ * HTTP Status Codes Module
+ * 
+ * Provides a set of named constants for commonly used HTTP status codes.
+ * Helps maintain code readability and consistency across API responses.
+ */
+
 const STATUS_CODES = {
     // Success Codes
     OK: 200,

@@ -9,19 +9,22 @@ const crypto=require('crypto');
 
 
 
-exports.Auth = async (req, res, next) => {
-    console.log("Login request");
-    console.log(req.body);
-    
-    
+/**
+ * Handles user authentication and registration.
+ * 
+ * Supports 'create' for signing up and 'login' for user authentication.
+ * Generates and returns a JWT token on success.
+ * Adds follower/following counts and filters sensitive fields in response.
+ */
+
+exports.Auth = async (req, res, next) => {    
+
+
     try {
         const {type}=req.params;
-
         const {  email, username, password } = req.body;
-        
-        if (!type || !["create", "login"].includes(type)) {
-            return next(new ApiError(STATUS_CODES.BAD_REQUEST, "Invalid request type"));
-        }
+
+        if (!type || !["create", "login"].includes(type))return next(new ApiError(STATUS_CODES.BAD_REQUEST, "Invalid request type"));
 
         const filtered= await UserModel.aggregate([{$match:{ 
             $or: [{ email }, { username }] 
@@ -37,40 +40,33 @@ exports.Auth = async (req, res, next) => {
         }}
     ]);
 
-    const isAvailable=filtered.length>0?filtered[0]:null;
-    console.log(isAvailable);
-    
-        if (type === "create") {
 
+
+    const isAvailable=filtered.length>0?filtered[0]:null;
+        if (type === "create") {
             if (isAvailable) {
                 const errorMessage = isAvailable.email === email ? 
                     "Email already in use" : 
                     "Username not available";
                 throw new ApiError(STATUS_CODES.CONFLICT, errorMessage);
             }
-
-
             req.body.password = await hashPassword(password);
             const newUser = new UserModel(req.body);
             await newUser.save();
-            const token = generateToken(newUser.toObject());
+            const token = await generateToken(newUser.toObject());
             return response(res, "Account created successfully", { token });
         }
 
         if (type === "login") {
-
-            if (!isAvailable) {
-                return next(new ApiError(STATUS_CODES.NOT_FOUND, "User not found"));
-            }
+            if (!isAvailable) return next(new ApiError(STATUS_CODES.NOT_FOUND, "User not found"));
 
             const passMatched = await matchPassword(password, isAvailable.password);
-            if (!passMatched) {
-                return next(new ApiError(STATUS_CODES.UNAUTHORIZED, "Username or Password Incorrect"));
-            }
+
+            if (!passMatched) return next(new ApiError(STATUS_CODES.UNAUTHORIZED, "Username or Password Incorrect"));
 
             const data = isAvailable;
             delete data.password;
-            const token = generateToken(data);
+            const token = await generateToken(data);
 
             return response(res, "Login Success", { token });
         }
@@ -81,18 +77,21 @@ exports.Auth = async (req, res, next) => {
 };
 
 
+
+/**
+ * Initiates password reset for a user.
+ * 
+ * Generates a reset token and expiration, saves it to the user record,
+ * and emits an event to send the reset link to the user's email.
+ */
+
 exports.resetPassword = async (req, res, next) => {
     const { email } = req.body;
-
     try {
-  
         const user = await UserModel.findOne({ email: email });
 
-        if (!user) {
-            return response(res, "Email is not registered");
-        }
-
-    
+        if (!user) return response(res, "Email is not registered");
+        
         const resetToken = crypto.randomBytes(32).toString('hex');
         const resetTokenExpire = Date.now() + 3600000; 
 
@@ -101,28 +100,31 @@ exports.resetPassword = async (req, res, next) => {
         user.resetPasswordExpire = resetTokenExpire;
         await user.save();
 
-        const resetLink = `http://localhost:5173/auth/forgetpassword?token=${resetToken}`;
+        const resetLink = `http://${process.env.DB_URL}/auth/forgetpassword?token=${resetToken}`;
 
-        await eventEmitter.emit('reset',user.email,resetLink);
+        await eventEmitter.emit('reset',email,resetLink);
 
         return response(res, "Please check your email for further instructions");
+
     } catch (e) {
         next(e);
     }
 };
 
 
+
+/**
+ * Changes the user's password using a valid reset token.
+ * 
+ * Verifies the token, updates the password with a hashed version,
+ * clears the reset token fields, and saves the user record.
+ */
+
 exports.ChangePassword=async(req,res,next)=>{
 
     try{
         const {token,password}=req.body;
-        console.log(token);
-        
-        
-
         const user=await UserModel.findOne({resetPasswordToken:token});
-        console.log(user);
-        
     
         if(user){
             user.resetPasswordToken=null;
@@ -130,6 +132,7 @@ exports.ChangePassword=async(req,res,next)=>{
             const newHashPassword=await hashPassword(password);
             user.password=newHashPassword;
             await user.save();
+
             response(res,"Your password is changed please login");
         }
         else{

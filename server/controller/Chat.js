@@ -7,6 +7,9 @@ const { Message, ChatModel }=require('../models/ChatModels');
 
 
 
+/**
+ * Load all the messages in the users inbox returns a list of userdata with their corresponding chatboxId's
+ */
 exports.getUsersInInbox = async (req, res, next) => {
   try {
     const chats = await UserModel.aggregate([
@@ -62,6 +65,9 @@ exports.getUsersInInbox = async (req, res, next) => {
 
 
 
+/**
+ * Used in the socket to add a message and emit it realtime to the corresponding user
+ */
 exports.addMessage=async(data)=>{
   const {getIoStream,getUserSocketId}=require('../helpers/sockets');
   const io=getIoStream();
@@ -97,7 +103,9 @@ exports.addMessage=async(data)=>{
 }
 
 
-
+/**
+ * Used to load all the messages in a particular chatbox (Lazy loading not applied now)
+ */
 exports.getOldMessage=async(req,res,next)=>{
   try{
     const Messages=await ChatModel.aggregate([

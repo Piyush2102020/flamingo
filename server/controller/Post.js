@@ -8,49 +8,48 @@ const { default: mongoose } = require('mongoose');
 const CommentModel = require('../models/CommentModel');
 const UserModel = require('../models/UserModel');
 
+
+
+/**
+ * Creates a new post with media upload.
+ * 
+ * Uploads the image to Cloudinary, saves post data to the database,
+ * and increments the user's post count.
+ */
+
 exports.MakePost = async (req, res, next) => {
     try {
         let mediaUrl = '';
-
-        if (req.file) {
-
-            const uploadStream = cloudinary.uploader.upload_stream(
+        const uploadStream = cloudinary.uploader.upload_stream(
                 { folder: "/flamingo_posts" },
                 async (error, result) => {
                     if (error) {
                         return next(error);
                     }
-
                     mediaUrl = result.secure_url;
-
                     const newPost = new PostModel({
                         userId: req.user._id,
                         media: mediaUrl,
                         ...req.body
                     });
-
                     await newPost.save();
+                    await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id),{$inc:{postCount:1}});
                     response(res, "Post Created");
                 }
             );
-
             streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-        } else {
-    
-            const newPost = new PostModel({
-                userId: req.user._id,
-                ...req.body
-            });
-
-            await newPost.save();
-            await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id),{$inc:{postCount:1}});
-            response(res, "Post Created");
-        }
     } catch (e) {
         next(e);
     }
 };
 
+
+/**
+ * Retrieves posts for the feed or a specific user.
+ * 
+ * Supports pagination and type-based filtering ('feed' or 'user').
+ * Populates user data and adds like metadata for each post.
+ */
 
 exports.RetrievePost = async (req, res, next) => {
     try {
@@ -104,6 +103,12 @@ exports.RetrievePost = async (req, res, next) => {
 
 
 
+
+/**
+ * Adds a comment or reply to a post.
+ * 
+ * Creates and saves a comment associated with a post and optional parent comment.
+ */
 exports.AddComment = async (req, res, next) => {
     try {
         const { postId, parentId } = req.params;
@@ -118,15 +123,15 @@ exports.AddComment = async (req, res, next) => {
 
 
 
+/**
+ * Retrieves comments or replies for a post.
+ * 
+ * Supports pagination and parent-based filtering, includes user data and like count.
+ */
 
 exports.GetComments = async (req, res, next) => {
-    console.log("Get comments triggered");
-    
     const { postId, parentId } = req.params;
-    
     const currentPage = Number(req.query.page) || 1;
-    console.log(postId,parentId,currentPage);
-    
     let limit = 20;
     let skipCount = (currentPage - 1) * limit;
     let filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )},{parentId:null}] } }
@@ -166,7 +171,6 @@ exports.GetComments = async (req, res, next) => {
                 likes:0
             }}
         ])
-
 
             response(res,"acknowledged",comments);
   

@@ -3,14 +3,14 @@ const { response } = require("../helpers/functions");
 const STATUS_CODES = require("../helpers/status_code");
 const PostModel = require("../models/PostModel");
 
+
+/**
+ * Takes in the post id and type is it like dislike etc and do the following actions
+ */
 exports.Interact=async(req,res,next)=>{
-
     try{
-
         const {id}=req.params;
         const {type}=req.query;
-
-
         if(!id || !type){
             throw new ApiError(STATUS_CODES.CONFLICT,"There was an error");
         }

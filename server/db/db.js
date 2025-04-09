@@ -1,7 +1,13 @@
 const mongoose=require('mongoose');
 
 
-// Connect to database
+
+
+/**
+ * Connects to the MongoDB database using the URL from environment variables.
+ *
+ * @returns {boolean} - Returns `true` if connection is successful, otherwise logs error and returns `false`.
+ */
 exports.connectDb=async ()=>{
     try{
 

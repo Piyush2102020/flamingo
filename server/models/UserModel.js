@@ -1,5 +1,36 @@
 const mongoose = require("mongoose");
 
+
+/**
+ * User Model
+ * 
+ * Represents a user in the system with profile, authentication, and social graph details.
+ *
+ * Fields:
+ * - name, username, email, password: basic account and auth info
+ * - profilePicture, bio, links, dob: profile customization
+ * - accountVisibility: public or private profile
+ * - messageAllowed: who can message the user (default: Everyone)
+ * - followers/following: arrays of User references for social networking
+ * - postCount: number of posts user has made
+ * - chats: stores chat metadata { userId, chatboxId }
+ * - resetPasswordToken & resetPasswordExpire: for password recovery
+ * - gender: user gender ("male", "female", or "not-specified")
+ * - notifications: embedded documents using NotificationSchema
+ *
+ * NotificationSchema:
+ * - type: the kind of notification (e.g., "like", "follow")
+ * - contentId: the ID of the related content (e.g., post ID)
+ * - userId: user who triggered the notification
+ * - contentType: type of content involved (default: "post")
+ *
+ * Indexes:
+ * - email, username: for uniqueness
+ * - userId in notifications: for efficient user-notification lookup
+ * - chats.userId: for efficient chat retrieval
+ *
+ * Adds timestamps: createdAt, updatedAt
+ */
 const NotificationSchema=new mongoose.Schema(
     {
         type:{type:String,required:true},

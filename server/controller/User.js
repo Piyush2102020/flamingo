@@ -7,6 +7,12 @@ const { response, generateToken } = require("../helpers/functions");
 const streamifier=require('streamifier');
 const {Notify}=require('../helpers/sockets');
 
+
+/**
+ * Searches users by username.
+ * 
+ * Returns up to 20 matching users with basic info and follow status.
+ */
 exports.searchUser = async (req, res, next) => {
     const { username } = req.params;
     try {
@@ -17,11 +23,7 @@ exports.searchUser = async (req, res, next) => {
             { $project: { name:1,username: 1, _id: 1, profilePicture: 1, isFollowing: 1 } }
         ]);
 
-        if (user) {
-            response(res, "acknowledged", user)
-        } else {
-            throw new ApiError(STATUS_CODES.NOT_FOUND, "User not found");
-        }
+            response(res, "acknowledged", user||[])
     }
     catch (e) {
         next(e)
@@ -29,14 +31,20 @@ exports.searchUser = async (req, res, next) => {
 }
 
 
+
+/**
+ * Fetches user info by ID.
+ * 
+ * Returns user details with follower stats and following status.
+ */
 exports.userInfo = async (req, res, next) => {
     try {
         const { id } = req.params;
-
-        if (!mongoose.isValidObjectId(id)) {
-            throw new ApiError(STATUS_CODES.BAD_REQUEST, "Uid not valid")
-        }
         const uid = new mongoose.Types.ObjectId(id);
+        
+        if (!mongoose.isValidObjectId(id)) throw new ApiError(STATUS_CODES.BAD_REQUEST, "Uid not valid")
+        
+        
 
         const user = await UserModel.aggregate([
             { $match: { _id: uid } },
@@ -56,9 +64,8 @@ exports.userInfo = async (req, res, next) => {
         ]);
 
         
-        if (!user.length) {
-            throw new ApiError(STATUS_CODES.NOT_FOUND, "User Not Found")
-        }
+        if (!user.length)  throw new ApiError(STATUS_CODES.NOT_FOUND, "User Not Found")
+        
 
         response(res,"acknowledged",user[0])
     } catch (e) {
@@ -68,7 +75,11 @@ exports.userInfo = async (req, res, next) => {
 
 
 
-
+/**
+ * Updates user profile details.
+ * 
+ * Checks for username conflict, updates profile, returns new token and data.
+ */
 exports.updateProfile = async (req, res, next) => {
     try{
         const checkUsername=await UserModel.findOne({username:req.body.username},{username:1});
@@ -82,11 +93,14 @@ exports.updateProfile = async (req, res, next) => {
     }
 };
 
-
+/**
+ * Updates user's profile picture.
+ * 
+ * Uploads image to Cloudinary, saves URL to user profile, and returns the link.
+ */
 exports.updateProfilePicture=async (req,res,next)=>{
     try{
         let link='';
-
         const upload_strean=cloudinary.uploader.upload_stream(
             {folder:"/flamingo/profile"},
             async(error,result)=>{
@@ -109,7 +123,11 @@ exports.updateProfilePicture=async (req,res,next)=>{
 
 
 
-
+/**
+ * Handles follow/unfollow interaction.
+ * 
+ * Updates follower and following lists, adds a follow notification if followed.
+ */
 exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action}=req.query;
@@ -127,6 +145,15 @@ exports.profileInteraction=async( req,res,next)=>{
 }
 
 
+/**
+ * Retrieves a paginated list of followers or following users for a given user ID.
+ * 
+ * Query Params:
+ * - type: "followers" or "following" (default is "followers")
+ * - page: Page number for pagination (default is 1)
+ * 
+ * Returns user details (_id, name, username, profilePicture) from the specified list.
+ */
 exports.getAccData=async(req,res,next)=>{
 
     const {id}=req.params;
@@ -142,7 +169,6 @@ exports.getAccData=async(req,res,next)=>{
         matchField="following";
     }
 
-    console.log("Page : ",page);
     
     const users=await UserModel.aggregate([
         {$match:{_id:new mongoose.Types.ObjectId(id)}},
@@ -171,6 +197,20 @@ exports.getAccData=async(req,res,next)=>{
     } 
 }
 
+
+
+
+/**
+ * Fetches notifications for the logged-in user.
+ * 
+ * Each notification includes:
+ * - Type of notification (e.g., "follow")
+ * - Associated contentId (if any)
+ * - Associated contentType (if any)
+ * - User details of the person who triggered the notification (username, profilePicture)
+ * 
+ * Results are sorted in descending order of creation time.
+ */
 exports.Notifications = async (req, res, next) => {
   try {
     const user = await UserModel.aggregate([
@@ -218,7 +258,6 @@ exports.Notifications = async (req, res, next) => {
 
     return response(res, "acknowledged", user);
   } catch (err) {
-    console.error(err);
-    return response(res, "error", null);
+   next(err);
   }
 };

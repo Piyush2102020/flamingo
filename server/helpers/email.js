@@ -1,8 +1,14 @@
 const nodemailer = require('nodemailer');
 const EventEmitter=require('events');
-
-
 const eventEmitter=new EventEmitter();
+
+/**
+ * Email Notification Module
+ * 
+ * Uses Nodemailer and EventEmitter to handle password reset email notifications.
+ * Emits 'reset' event with user email and reset link to trigger email sending.
+ */
+
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',  
@@ -27,7 +33,6 @@ const sendEmail = async (to, link) => {
         };
 
         const info = await transporter.sendMail(mailOptions);
-        console.log('Email sent:', info.response);
     } catch (error) {
         console.error('Error sending email:', error);
     }

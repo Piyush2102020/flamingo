@@ -4,6 +4,45 @@ const errHandler = require('../middleware/errHandler');
 const validator = require('../middleware/validator');
 const multer = require('multer');
 
+
+/**
+ * 🔗 API Routes
+ *
+ * Base router handling all incoming API requests. Applies token validation middleware
+ * after auth routes, and sets up global error handling.
+ *
+ * ▸ Auth Routes
+ *  - POST /auth/:type               → Login or Register based on :type
+ *  - POST /reset                    → Send password reset link/email
+ *  - POST /changepassword           → Change password using token
+ *
+ * ▸ Middleware
+ *  - validator                      → Validates Bearer token and user session
+ *
+ * ▸ User Routes
+ *  - GET /user/:id                  → Get user public profile info
+ *  - GET /search/:username          → Search users by username
+ *  - GET/PUT /profile/:id           → Get or interact (follow/unfollow) with a profile
+ *  - POST /updateprofile            → Update bio, links, visibility etc.
+ *  - POST /updateprofilepicture     → Upload profile image (uses multer)
+ *  - GET /notification              → Fetch logged-in user notifications
+ *
+ * ▸ Post Routes
+ *  - GET/POST /content              → Retrieve or create post (with optional media)
+ *  - GET/POST /content/:postId/comments/:parentId?
+ *                                   → Get/add comment or nested reply to a post
+ *  - POST /content/:id              → Like, save, or interact with post
+ *
+ * ▸ Chat Routes
+ *  - GET /inbox                     → Get users with whom chat exists
+ *  - GET /getmessages/:chatboxid    → Fetch old messages in chatbox
+ *
+ * ▸ Music
+ *  - GET /music                     → Search and return music data (e.g. YouTube API)
+ *
+ * ▸ Error Handler
+ *  - Any uncaught error in the above routes will be handled by `errHandler`
+ */
 const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');

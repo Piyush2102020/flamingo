@@ -3,6 +3,16 @@ const jwt=require('jsonwebtoken');
 
 
 
+/**
+ * Auth & Response Utility Module
+ * 
+ * Provides utility functions for:
+ * - Sending standardized JSON responses (`response`)
+ * - Password hashing and comparison (`hashPassword`, `matchPassword`)
+ * - JWT token generation and validation (`generateToken`, `validateToken`)
+ */
+
+
 exports.response=(res,message,data)=>{
     res.status(200).json(
         {
