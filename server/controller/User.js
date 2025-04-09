@@ -94,9 +94,7 @@ exports.updateProfilePicture=async (req,res,next)=>{
                     return next(error)
                 }
                 link=await result.secure_url;
-       
-                
-
+                console.log("Link : ",link);
                 await UserModel.findByIdAndUpdate(req.user._id,{$set:{profilePicture:link}});
                 response(res,"acknowledged",{link:link})
             }
@@ -119,7 +117,6 @@ exports.profileInteraction=async( req,res,next)=>{
         const notification={type:"follow",contentId:null,userId:req.user._id};
         await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
         await UserModel.findByIdAndUpdate(req.user._id,{$push:{following:id}});
-        Notify(id,"normal");  
         response(res,"acknowledged");
     }else{
         await UserModel.findByIdAndUpdate(id,{$pull:{followers:req.user._id}});

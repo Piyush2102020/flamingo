@@ -1,9 +1,10 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../helpers/store"
 import { useEffect, useState } from "react";
 import './style.css'
 import { getSocket } from "../../helpers/socketServer";
 import axiosInstance from "../../helpers/axiosModified";
+import { updateChatboxMeta } from "../../helpers/slice";
 export default function RealtimeChatBox() {
   const chatboxInfo=useSelector((state:RootState)=>state.context.chatbox);
   const senderId=useSelector((state:RootState)=>state.context.userData._id);
@@ -11,9 +12,11 @@ export default function RealtimeChatBox() {
   const [messages,setMessages]=useState([]);
   const [inputMessage,setInputMessage]=useState("");
   const socket=getSocket();
-
+  const dispatch=useDispatch();
 
   const loadMessage=async ()=>{
+    console.log("chatbox id : ",chatboxInfo.chatboxId);
+    
     const oldMessages=await axiosInstance.get(`/getmessages/${chatboxInfo.chatboxId}`);
     console.log("Old Messages", oldMessages);
     setMessages(prev=>[...prev,...oldMessages]);
@@ -28,7 +31,6 @@ export default function RealtimeChatBox() {
       text:inputMessage,
       chatboxId:chatboxInfo.chatboxId
     });
-
     }
 
     useEffect(()=>{
@@ -37,8 +39,10 @@ export default function RealtimeChatBox() {
       }
       if(socket){
         socket.on('newMessage',(data:any)=>{
-          console.log(data);
-          
+          if(!chatboxInfo.chatboxId){
+            console.log("Setting chatbox id : ",data.chatboxId);
+             dispatch(updateChatboxMeta({chatboxId:data.chatboxId}));
+          }
           if(data.chatboxId==chatboxInfo.chatboxId){
             setMessages(prev => [...prev, data.data]);
           }
@@ -47,7 +51,7 @@ export default function RealtimeChatBox() {
 
       return ()=>{
         socket?.off('newMessage')}
-    },[socket])
+    },[socket,chatboxInfo])
     return (<div className="chatbox-container">
 
       <h2>{chatboxInfo.receiverUsername}</h2>

@@ -67,7 +67,24 @@ exports.addMessage=async(data)=>{
   const io=getIoStream();
   const newMessage=new Message(data);
   await newMessage.save();
-  await ChatModel.findByIdAndUpdate(data.chatboxId,{$push:{messages:newMessage._id}});
+  console.log(data);
+  
+  if(mongoose.isValidObjectId(data.chatboxId)){
+  
+    await ChatModel.findByIdAndUpdate(data.chatboxId,{$push:{messages:newMessage._id}});
+  }else{
+    console.log("Creating new chat : ");
+    
+    const newChatbox=new ChatModel({
+      users:[data.senderId,data.receiverId],
+      messages:[newMessage._id]
+    });
+    await newChatbox.save()
+    await UserModel.findByIdAndUpdate(data.senderId,{$push:{chats:{userId:data.receiverId,chatboxId:newChatbox._id}}})
+    await UserModel.findByIdAndUpdate(data.receiverId,{$push:{chats:{userId:data.senderId,chatboxId:newChatbox._id}}})
+    data.chatboxId=newChatbox._id;
+  }
+  
 
   if(io){
     const senderSocket=getUserSocketId(data.senderId);

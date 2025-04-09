@@ -15,15 +15,14 @@ export default function Profile() {
     const userId = useMemo(() => user?.split("-")[1], [user]);
     const [profileData, setProfileData] = useState<any>({});
     const userData = useSelector((state: RootState) => state.context.userData) as any;
+    const inboxes=useSelector((state:RootState)=>state.context.inbox);
     const isOwnProfile = userData._id === userId;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const fetchUserData = async (userId: string) => {
-
         const response = await axiosInstance.get(`/user/${userId}`);
         console.log(response);
-
         setProfileData(response);
     }
 
@@ -82,7 +81,30 @@ export default function Profile() {
                     !isOwnProfile &&
                     <div className='button-holder'>
                         <button onClick={handleAction} className='btn accent'>{profileData.isFollowing ? "Unfollow" : "Follow"}</button>
-                        <button className='btn'>Message</button>
+                        <button
+                        onClick={()=>{
+                            console.log(profileData._id);
+                            dispatch(updateChatboxMeta({chatboxId:""}));
+                            for(let val of inboxes){
+                                console.log(val);
+                                if(val.userId===profileData._id){
+                                    console.log("User found adding chat");
+                                    dispatch(updateChatboxMeta({     
+                                        chatboxId:val.chatboxId,
+                                    }))
+                                    break;
+                                }
+                            }
+
+                            dispatch(updateChatboxMeta({
+                                receiverId:profileData._id,
+                                receiverUsername:profileData.username,
+                                receiverProfilePicture:profileData.profilePicture,
+                               
+                            }))
+                            navigate('/dashboard/chatbox')
+                        }}
+                        className='btn'>Message</button>
                     </div>
                 }
             </div>
