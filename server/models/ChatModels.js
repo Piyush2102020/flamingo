@@ -12,6 +12,7 @@ const ChatModel = mongoose.model("Chats", ChatSchema);
 
 const MessageSchema = new mongoose.Schema({
   receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true, index: true },
+  senderId: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true, index: true },
   text: { type: String, default: "" },
   type: { type: String, enum: ["user", "post"], default: "user" },
   mediaUrl: { type: String, default: null },

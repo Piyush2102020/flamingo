@@ -3,6 +3,7 @@ import { RootState } from "../../helpers/store"
 import { useEffect, useState } from "react";
 import './style.css'
 import { getSocket } from "../../helpers/socketServer";
+import axiosInstance from "../../helpers/axiosModified";
 export default function RealtimeChatBox() {
   const chatboxInfo=useSelector((state:RootState)=>state.context.chatbox);
   const senderId=useSelector((state:RootState)=>state.context.userData._id);
@@ -10,6 +11,13 @@ export default function RealtimeChatBox() {
   const [messages,setMessages]=useState([]);
   const [inputMessage,setInputMessage]=useState("");
   const socket=getSocket();
+
+
+  const loadMessage=async ()=>{
+    const oldMessages=await axiosInstance.get(`/getmessages/${chatboxInfo.chatboxId}`);
+    console.log("Old Messages", oldMessages);
+    setMessages(prev=>[...prev,...oldMessages]);
+  }
 
   
   const sendMessage=()=>{
@@ -24,17 +32,21 @@ export default function RealtimeChatBox() {
     }
 
     useEffect(()=>{
+      if(chatboxInfo.chatboxId){
+       loadMessage(); 
+      }
       if(socket){
         socket.on('newMessage',(data:any)=>{
+          console.log(data);
           
           if(data.chatboxId==chatboxInfo.chatboxId){
-            setMessages(prev => [...prev, data]);
+            setMessages(prev => [...prev, data.data]);
           }
         })
       }
 
-
-      return ()=>{socket.off('newMessage')}
+      return ()=>{
+        socket?.off('newMessage')}
     },[socket])
     return (<div className="chatbox-container">
 

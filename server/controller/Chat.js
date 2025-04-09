@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const { response } = require("../helpers/functions");
-const { getIoStream, getUserSocketId } = require("../helpers/sockets");
+const { Message, ChatModel }=require('../models/ChatModels');
 
 
 
@@ -64,13 +64,43 @@ exports.getUsersInInbox = async (req, res, next) => {
 
 exports.addMessage=async(data)=>{
   const {getIoStream,getUserSocketId}=require('../helpers/sockets');
-  console.log("Message : ",data);
   const io=getIoStream();
+  const newMessage=new Message(data);
+  await newMessage.save();
+  await ChatModel.findByIdAndUpdate(data.chatboxId,{$push:{messages:newMessage._id}});
+
   if(io){
     const senderSocket=getUserSocketId(data.senderId);
     const receiverSocket=getUserSocketId(data.receiverId);
-    console.log(senderSocket,receiverSocket);
-    if(senderSocket)io.to(senderSocket).emit('newMessage',data);
-    if(receiverSocket) io.to(receiverSocket).emit('newMessage',data);
+    const dataItem={data:newMessage,chatboxId:data.chatboxId};
+    if(senderSocket)io.to(senderSocket).emit('newMessage',dataItem
+      );
+    if(receiverSocket) io.to(receiverSocket).emit('newMessage',dataItem);
+  }
+}
+
+
+
+exports.getOldMessage=async(req,res,next)=>{
+  try{
+    const Messages=await ChatModel.aggregate([
+      {$match:{_id:new mongoose.Types.ObjectId(req.params.chatboxid)}},
+      {$project:{
+        messages:1,
+        _id:0
+      }},
+      {
+        $lookup:{
+          from:"messages",
+          localField:"messages",
+          foreignField:"_id",
+          as:"messages"
+        }
+      },{$project:{messages:1}}
+    ])
+
+    response(res,"acknowledged",Messages[0]?.messages||[]);
+  }catch(e){
+    next(e);
   }
 }
