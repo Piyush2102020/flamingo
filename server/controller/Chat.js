@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const { response } = require("../helpers/functions");
+const { getIoStream, getUserSocketId } = require("../helpers/sockets");
 
 
 
@@ -59,3 +60,17 @@ exports.getUsersInInbox = async (req, res, next) => {
   }
 };
 
+
+
+exports.addMessage=async(data)=>{
+  const {getIoStream,getUserSocketId}=require('../helpers/sockets');
+  console.log("Message : ",data);
+  const io=getIoStream();
+  if(io){
+    const senderSocket=getUserSocketId(data.senderId);
+    const receiverSocket=getUserSocketId(data.receiverId);
+    console.log(senderSocket,receiverSocket);
+    if(senderSocket)io.to(senderSocket).emit('newMessage',data);
+    if(receiverSocket) io.to(receiverSocket).emit('newMessage',data);
+  }
+}

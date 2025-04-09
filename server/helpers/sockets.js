@@ -11,10 +11,10 @@ exports.initSocket=(server)=>{
     io.on('connection',(socket)=>{
         const userId=socket.handshake.query.id;
         console.log("User Connected : ",userId,socket.id);
-        
         userMap.set(userId,socket.id);
 
 
+        socket.on('message',addMessage);
         
         socket.on('disconnect', () => {
             console.log("Client disconnected : ", socket.id);
@@ -26,7 +26,9 @@ exports.initSocket=(server)=>{
 }
 
 
-
+exports.getIoStream=()=>{
+    return io||null;
+}
 exports.getUserSocketId=(userId)=>{
     return userMap.get(userId)
 }
