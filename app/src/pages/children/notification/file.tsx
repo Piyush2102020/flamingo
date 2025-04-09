@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import axiosInstance from "../../../helpers/axiosModified";
-
+import NotificationLayout from "../../../components/notification-layout/file";
+import './style.css'
 export default function Notifications(){
     const [notifications,setNotification]=useState<[any]|null>(null);
 
@@ -19,9 +20,9 @@ export default function Notifications(){
         <div>
             <h1>Notifications</h1>
 
-            <div className="notification loader">
+            <div className="notificationloader">
                 {notifications &&notifications.length>0?
-                notifications.map((value)=><h3>{value._id}</h3>):
+                notifications.map((value)=><NotificationLayout item={value}/>):
                 <p>No new notification</p>}
             </div>
         </div>

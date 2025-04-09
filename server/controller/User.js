@@ -116,8 +116,7 @@ exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action}=req.query;
     if(action==='follow'){
-
-        const notification={type:"follow",referenceId:req.user._id}
+        const notification={type:"follow",contentId:null,userId:req.user._id};
         await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
         await UserModel.findByIdAndUpdate(req.user._id,{$push:{following:id}});
         Notify(id,"normal");  
@@ -175,12 +174,54 @@ exports.getAccData=async(req,res,next)=>{
     } 
 }
 
-exports.Notifications=async(req,res,next)=>{
-    const notification=await UserModel.findById(req.user._id,{notifications:1});
-    if(notification){
-        response(res,"acknowledged",notification.notifications);
-    }else{
-        response(res,"acknowledged",null);
-    }
- 
-}
+exports.Notifications = async (req, res, next) => {
+  try {
+    const user = await UserModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(req.user._id) } },
+      {
+        $project: {
+          notifications: 1,
+        },
+      },
+      {
+        $unwind: "$notifications",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "notifications.userId",
+          foreignField: "_id",
+          as: "userData",
+          pipeline: [
+            {
+              $project: {
+                username: 1,
+                profilePicture: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$userData",
+      },
+      {
+        $project: {
+          _id: 0,
+          type: "$notifications.type",
+          contentId: "$notifications.contentId",
+          contentType: "$notifications.contentType",
+          userData: "$userData",
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+
+    return response(res, "acknowledged", user);
+  } catch (err) {
+    console.error(err);
+    return response(res, "error", null);
+  }
+};

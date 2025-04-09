@@ -1,22 +1,15 @@
 const mongoose = require("mongoose");
 
-const notificationSchema = new mongoose.Schema({
-    type: { 
-        type: String, 
-        enum: ["like", "comment", "follow", "message", "system"], 
-        required: true 
-    }, 
-
-    referenceId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        refPath: "referenceModel" 
-    }, 
-
-    timestamp: { 
-        type: Date, 
-        default: Date.now 
+const NotificationSchema=new mongoose.Schema(
+    {
+        type:{type:String,required:true},
+        contentId:{type:String},
+        userId:{type:mongoose.Types.ObjectId,required:true,index:true},
+        contentType:{type:"String",default:"post"}
     }
-});
+)
+
+
 
 const userSchema = new mongoose.Schema({
     name: { type: String, default: "" },
@@ -36,7 +29,7 @@ const userSchema = new mongoose.Schema({
     resetPasswordToken:{type:String,default:null},
     resetPasswordExpire:{type:Date,default:null},
     gender:{type:String,default:"not-specified",enum:["male","female","not-specified"]},
-    notifications:[notificationSchema]
+    notifications:[NotificationSchema]
 }, { timestamps: true });
 
 userSchema.index({ "chats.userId": 1 });

@@ -1,0 +1,5 @@
+.notificationloader{
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-large);
+}
