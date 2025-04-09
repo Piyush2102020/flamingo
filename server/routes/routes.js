@@ -8,7 +8,7 @@ const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
 const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications, updateProfilePicture } = require('../controller/User');
-const { getMessages, sendMessage, getAllChat, getChatId, loadChat, LoadInbox } = require('../controller/Chat');
+const { getUsersInInbox} = require('../controller/Chat');
 const { SearchMusic } = require('../controller/music');
 
 // Multer Setup (Memory Storage for Uploads)
@@ -44,7 +44,7 @@ routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddCo
 routes.post('/content/:id', Interact);
 
 /// 🔹 **Chat Routes**
-routes.route('/chat').get(LoadInbox);
+routes.get('/inbox',getUsersInInbox);
 
 
 routes.get('/music',SearchMusic)
