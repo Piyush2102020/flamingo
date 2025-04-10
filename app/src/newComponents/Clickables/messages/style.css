@@ -1,0 +1,25 @@
+.base-message{
+    
+    padding: var(--padding-medium);
+    margin: var(--margin-medium);
+    border-radius: var(--radius-medium);
+}
+
+
+.sender{
+    width: 60%;
+    align-self: flex-end;
+}
+
+.receiver{
+    width: 60%;
+}
+
+.background-sender{
+    border: 1px ridge var(--flamingo);
+}
+
+
+.background-receiver{
+    background-color: var(--flamingo);
+}

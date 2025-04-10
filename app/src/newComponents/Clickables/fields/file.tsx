@@ -8,17 +8,18 @@ type FieldItems={
     onChange:(e:React.ChangeEvent<HTMLInputElement>)=>void;
     placeholder:string;
     classname?:string;
+    name?:string;
 }
 
 
-export const BasicInputField:React.FC<FieldItems>=({value,style,placeholder,onChange,classname})=>{
+export const BasicInputField:React.FC<FieldItems>=({name,value,style,placeholder,onChange,classname})=>{
     return(
-        <input value={value} style={style} onChange={onChange} placeholder={placeholder} className={`input ${classname}`}/>
+        <input name={name} value={value} style={style} onChange={onChange} placeholder={placeholder} className={`input ${classname}`}/>
     )
 }
 
-export const AccentInputField:React.FC<FieldItems>=({value,style,placeholder,onChange,classname})=>{
+export const AccentInputField:React.FC<FieldItems>=({name,value,style,placeholder,onChange,classname})=>{
     return(
-        <input value={value} style={style} onChange={onChange} placeholder={placeholder} className={`input ${classname}`}/>
+        <input name={name} value={value} style={style} onChange={onChange} placeholder={placeholder} className={`input ${classname}`}/>
     )
 }

@@ -31,7 +31,7 @@ export const GenericHeader: React.FC<HeaderProps> = ({ component,style,decorate=
     timestamp, showIcon = true, children, clickType = 'header'
 }) => {
     return (
-        <Holder onClick={clickType=='header'?onClick:undefined}  direction='horizontal'>
+        <Holder classname={classname} style={style} onClick={clickType=='header'?onClick:undefined}  direction='horizontal'>
             <SmallImage imgPath={imagePath} />
             <Holder>
                 <Holder style={{alignItems:"center"}} direction='horizontal'>

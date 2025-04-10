@@ -5,9 +5,10 @@ import './style.css'
 import { getSocket } from "../../helpers/socketServer";
 import axiosInstance from "../../helpers/axiosModified";
 import { updateChatboxMeta } from "../../helpers/slice";
+import { MessageLayout, ReceiverMessageLayout, SenderMessageLayout } from "../../newComponents/Clickables/messages/file";
 export default function RealtimeChatBox() {
   const chatboxInfo=useSelector((state:RootState)=>state.context.chatbox);
-  const senderId=useSelector((state:RootState)=>state.context.userData._id);
+  const senderId=useSelector((state:RootState)=>state.context.userData);
   
   const [messages,setMessages]=useState([]);
   const [inputMessage,setInputMessage]=useState("");
@@ -26,7 +27,7 @@ export default function RealtimeChatBox() {
   const sendMessage=()=>{
     
     socket.emit("message",{
-      senderId:senderId,
+      senderId:senderId._id,
       receiverId:chatboxInfo.receiverId,
       text:inputMessage,
       chatboxId:chatboxInfo.chatboxId
@@ -57,7 +58,12 @@ export default function RealtimeChatBox() {
       <h2>{chatboxInfo.receiverUsername}</h2>
 
       <div className="messages">
-        {messages?messages.map((value)=><h4>{value.text}</h4>):"Start a conversation now"}
+        {messages?messages.map((value)=>{
+          value.isSender=value.senderId===senderId._id;
+          value.receiverProfilePicture=value.isSender?senderId.profilePicture:chatboxInfo.receiverProfilePicture;
+          
+          console.log("New value : ",value);
+          return value.isSender?<SenderMessageLayout item={value}/>:<ReceiverMessageLayout item={value}/>}):"Start a conversation now"}
       </div>
 
       <div className="input-field-container">

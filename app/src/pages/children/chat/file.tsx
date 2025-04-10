@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import './style.css'
 import axiosInstance from "../../../helpers/axiosModified"
-import GenericHeader from "../../../components/GenericHeader/file";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addUsersInInbox, updateChatboxMeta} from "../../../helpers/slice";
 import { RootState } from "../../../helpers/store";
+import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/file";
 
 export default function Chat() {
   const dispatch = useDispatch();
@@ -25,25 +25,33 @@ export default function Chat() {
   return (
     <div className="chatbox">
       <h1>Direct Messages</h1>
-      {inbox.map((value, index) =><h2><GenericHeader 
-      key={index}
-      clickMode="header"
-       profilePic={value.userData.profilePicture}
-       username={value.userData.username}
-       onClick={()=>{
-        dispatch(updateChatboxMeta({
-          receiverId:value.userId,
-          receiverUsername:value.userData.username,
-          receiverProfilePicture:value.userData.profilePicture,
-          chatboxId:value.chatboxId
-        }));
-        navigate('/dashboard/chatbox');
 
-       }}
-       content=""
-       timestamp=""
-      /></h2>
-      )}
+      {inbox.map((value:any,index)=>{
+        return(
+          <GenericHeader
+          key={index}
+          classname="chip"
+          decorate={false}
+          imagePath={value.userData.profilePicture}
+          headText={value.userData.username}
+          hintText="Kaise hai bhai?"
+          onClick={()=>{
+            dispatch(updateChatboxMeta({
+              receiverId:value.userId,
+              receiverUsername:value.userData.username,
+              receiverProfilePicture:value.userData.profilePicture,
+              chatboxId:value.chatboxId
+            }));
+            navigate('/dashboard/chatbox');
+    
+           }}
+           showIcon={false}
+           clickType="header"
+          >
+          
+          </GenericHeader>
+        )
+      })}
 
     </div>
   )

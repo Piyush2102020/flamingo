@@ -77,12 +77,12 @@ export default function Auth() {
             <div className="auth-form">
                 <h1 className="appname">{import.meta.env.VITE_APP_NAME}</h1>
                 <ConditionalRendererWithoutDefault condition={!isLogin} component={<>
-                        <BasicInputField onChange={handleChange} placeholder="Name" value={formData.name} />
-                        <BasicInputField onChange={handleChange} placeholder="Username" value={formData.username} />
+                        <BasicInputField name="name" onChange={handleChange} placeholder="Name" value={formData.name} />
+                        <BasicInputField name="username" onChange={handleChange} placeholder="Username" value={formData.username} />
                     </>}/>
         
-                <BasicInputField onChange={handleChange} placeholder="Email" value={formData.email} />
-                <BasicInputField onChange={handleChange} placeholder="Password" value={formData.password} />
+                <BasicInputField name="email" onChange={handleChange} placeholder="Email" value={formData.email} />
+                <BasicInputField  name="password" onChange={handleChange} placeholder="Password" value={formData.password} />
 
                 <ConditionalRendererWithoutDefault condition={navigator.onLine} component={<GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
                     <GoogleLogin text={isLogin ? "continue_with" : "signup_with"} theme="filled_blue" onSuccess={handleSuccess} onError={() => { toast.error("Oauth Error") }}></GoogleLogin>

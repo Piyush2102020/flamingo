@@ -6,6 +6,11 @@ import { RootState } from '../../helpers/store';
 import axiosInstance from '../../helpers/axiosModified';
 import { useEffect} from 'react';
 import CommentLayout from '../comment-layout/file';
+import { BasicInputField } from '../../newComponents/Clickables/fields/file';
+import { AccentButton, BasicButton } from '../../newComponents/Clickables/buttons/file';
+import { Holder } from '../../newComponents/Generics/GenericHolders/file';
+import { ConditionalRendererWithoutDefault } from '../../newComponents/Generics/GenericConditionlRender/file';
+import { TextHint } from '../../newComponents/Generics/GenericText/file';
 
 export default function CommentBox() {
   const disptach = useDispatch();
@@ -45,12 +50,16 @@ export default function CommentBox() {
           }} item={value} />)}
         </div>
 
-        <div style={{width:'80%'}}>
-          {commentBoxState.hint && <h2 className='text-light'>{commentBoxState.hint}</h2>}
-          <div className='comment-input'>
-            <input className='input' onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
-            <button className='btn accent' onClick={addComment}>Add Comment</button>
-          </div>
+        <div style={{width:'70%'}}>
+          <ConditionalRendererWithoutDefault 
+          condition={!!commentBoxState.hint.trim()}
+          component={<TextHint text={commentBoxState.hint}/>}
+          />
+            <Holder direction='horizontal' classname='comment-input'>
+            <BasicInputField  onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment'/>
+            <BasicButton onClick={addComment} text='Add Comment'/>
+            </Holder>
+
 
         </div>
       </div>
