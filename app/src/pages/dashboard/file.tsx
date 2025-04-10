@@ -11,12 +11,13 @@ import { RootState } from "../../helpers/store";
 import CommentBox from "../../components/commentBox/file";
 import startSocket from "../../helpers/socketServer";
 import Responsive from "../../helpers/responsive";
+import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
 export default function Dashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const commentBoxVisibility=useSelector((state:RootState)=>state.context.comment.isVisible);
-    const isMobile=useSelector((state:RootState)=>state.context.isMobile);
-    const currentUser=useSelector((state:RootState)=>state.context.userData);
+    const commentBoxVisibility = useSelector((state: RootState) => state.context.comment.isVisible);
+    const isMobile = useSelector((state: RootState) => state.context.isMobile);
+    const currentUser = useSelector((state: RootState) => state.context.userData);
     Responsive();
     useEffect(() => {
         if (!window.location.pathname.includes('home')) {
@@ -27,35 +28,30 @@ export default function Dashboard() {
             const data = jwtDecode(token);
             dispatch(addData(data));
         }
-        }, []);
+    }, []);
 
-        useEffect(()=>{
-          startSocket(currentUser._id)
-        },[currentUser])
+    useEffect(() => {
+        startSocket(currentUser._id)
+    }, [currentUser])
 
     return (
 
 
         <div className="dashboard-container">
-       
-            
-    {commentBoxVisibility&&<CommentBox/>}
+            <ConditionalRendererWithoutDefault condition={commentBoxVisibility} component={<CommentBox />} />
             <Header />
-            
-            <div style={isMobile?{flexDirection:"column-reverse"}:{}} className="dashboard-section">
-                <Navbar style={isMobile?{position:"fixed",bottom:"0px",backgroundColor:"var(--color-background)",zIndex:"200",flexDirection:"row"}:{}} />
-                <div style={isMobile?{width:window.innerWidth}:{}} className="outlet-container">
+
+            <div style={isMobile ? { flexDirection: "column-reverse" } : {}} className="dashboard-section">
+                <Navbar style={isMobile ? { position: "fixed", bottom: "0px", backgroundColor: "var(--color-background)", zIndex: "200", flexDirection: "row" } : {}} />
+                <div style={isMobile ? { width: window.innerWidth } : {}} className="outlet-container">
                     <Outlet />
                 </div>
 
-{
-   !isMobile&&
-    <SideBarContainer />
-}
-                
+                <ConditionalRendererWithoutDefault condition={!isMobile} component={<SideBarContainer />} />
+
             </div>
-            
-    
+
+
         </div>
 
     );

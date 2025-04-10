@@ -6,91 +6,79 @@ import React, { useState } from "react";
 import axiosInstance from "../../../helpers/axiosModified";
 import { addData } from "../../../helpers/slice";
 import { useNavigate } from "react-router-dom";
+import { MediumImage } from "../../../newComponents/Clickables/icons/file";
+import { TextHint } from "../../../newComponents/Generics/GenericText/file";
+import { BasicInputField } from "../../../newComponents/Clickables/fields/file";
+import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
+import { AccentButton, BasicButton } from "../../../newComponents/Clickables/buttons/file";
 
 export default function Settings() {
 
 
     const userData = useSelector((state: RootState) => state.context.userData) as any;
     const [localData, setLocalData] = useState(userData) as any;
-    const dispatch=useDispatch();
-    const navigate=useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     const handlePicChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const formData = new FormData();
             formData.append('image', event.target.files[0]);
-    
+
             const updateProfilePic = await axiosInstance.post('/updateprofilepicture', formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             }) as any;
 
-            
+
             const newLocalData = { ...localData, profdilePicture: updateProfilePic.link };
-        
-            
+
+
             setLocalData(newLocalData);
             dispatch(addData(newLocalData));
         }
     };
-    
-    const updateProfile=async()=>{
-        const updatedData=await axiosInstance.post('/updateprofile',localData) as any;
-        console.log("Updated Data : ",updatedData);
+
+    const updateProfile = async () => {
+        const updatedData = await axiosInstance.post('/updateprofile', localData) as any;
+        console.log("Updated Data : ", updatedData);
         dispatch(addData(updatedData.newData));
-        localStorage.setItem('token',updatedData.token);
+        localStorage.setItem('token', updatedData.token);
     }
 
     return (
         <div className="settings-page">
-            {localData != userData && <button className="btn accent" style={{ width: "fit-content", alignSelf: "flex-end" }} onClick={updateProfile}>Save Changes</button>}
+            {localData != userData &&
+            <AccentButton style={{ width: "fit-content", alignSelf: "flex-end" }} onClick={updateProfile} text="Save Changes"/>
+           }
             <div style={{ position: "relative" }}>
                 <input onChange={handlePicChange} type="file" accept="image/*" style={{ position: "absolute", opacity: "0", width: "100%", height: "100%" }} />
-                <img className="dp-large" src={localData.profilePicture ? localData.profilePicture : "/icons/profile-default.svg"} />
+                <MediumImage imgPath={localData.profdilePicture} />
             </div>
 
-            <span className="text-light">Tap here to change</span>
+            <TextHint text="Tap here to change" />
 
             <div className="settings-field">
-                <span className="text-accent">User Info</span>
-                <div>
-                    <span className="text-light">Name</span>
-                    <input onChange={(e) => setLocalData({ ...localData,name: e.target.value })} value={localData.name} placeholder="Name" className="input" />
-                </div>
+                <TextHint classname="text-accent" text="User info" />
 
-                <div>
+                <TextHint text="Name" />
+                <BasicInputField onChange={(e) => setLocalData({ ...localData, name: e.target.value })} value={localData.name} placeholder="Name" />
 
-                    <span className="text-light">Username</span>
-                    <input onChange={(e) => setLocalData({ ...localData, username: e.target.value })} value={localData.username} placeholder="Username" className="input" />
-                </div>
+                <TextHint text="Username" />
+                <BasicInputField onChange={(e) => setLocalData({ ...localData, username: e.target.value })} value={localData.username} placeholder="Username" />
 
-                <div>
+                <TextHint text="Bio" />
+                <BasicInputField onChange={(e) => setLocalData({ ...localData, bio: e.target.value })} value={localData.bio} placeholder="Bio" />
 
-                    <span className="text-light">Bio</span>
-                    <input onChange={(e) => setLocalData({ ...localData, bio: e.target.value })} value={localData.bio} placeholder="Bio" className="input" />
-                </div>
+                <TextHint text="Links" />
+                <BasicInputField onChange={(e) => setLocalData({ ...localData, links: e.target.value })} value={localData.links} placeholder="Add Website link" />
 
 
-
-                <div>
-
-                    <span className="text-light">Links</span>
-                    <input onChange={(e) => setLocalData({ ...localData, links: e.target.value })} value={localData.links} placeholder="Add Website link" className="input" />
-                </div>
+                <TextHint text="Email  (Cant Be Changed)" />
+                <div className="input text-light" >{localData.email}</div>
 
 
-                <div>
-                    <span className="text-light">Links</span>
-                    <input onChange={(e) => setLocalData({ ...localData, dob: e.target.value })}  type="date" placeholder="Add Website link" className="input" />
-                </div>
-
-
-                <div>
-                    <span className="text-light">Email  (Cant Be Changed)</span>
-                    <div className="input text-light" >{localData.email}</div>
-                </div>
-
-                <div className="radio-group">
+                <Holder direction="horizontal" classname="radio-group">
                     <label>
                         <input
                             name="gender"
@@ -123,14 +111,15 @@ export default function Settings() {
                         />
                         Not-specified
                     </label>
-                </div>
+
+                </Holder>
 
 
-
-                <span className="text-accent">Privacy Settings</span>
+                <TextHint classname="text-accent" text="Privacy Settings" />
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "var(--gap-medium)" }}>
-                    <span className="text-light">Account Visibility</span>
+                    <TextHint text="Account Visibility" />
+
                     <select onChange={e => setLocalData({ ...userData, accountVisibility: e.target.value.toLowerCase() })} value={localData.accountVisibility} className="select">
                         <option>public</option>
                         <option>private</option>
@@ -139,7 +128,7 @@ export default function Settings() {
 
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "var(--gap-medium)" }}>
-                    <span className="text-light">Allow Direct Message from</span>
+                    <TextHint text="Allow Direct Messages From" />
                     <select onChange={e => setLocalData({ ...userData, messageAllowed: e.target.value.toLowerCase() })} value={localData.messageAllowed} className="select">
                         <option>everyone</option>
                         <option>followers</option>
@@ -148,10 +137,10 @@ export default function Settings() {
                 </div>
 
 
-                <span className="text-accent">Security Settings</span>
+                <TextHint classname="text-accent" text="Security Settings" />
 
-                <button className="btn" onClick={()=>navigate('/auth/forgetpassword')}>Change Password</button>
-                <button className="btn accent">Delete My Account</button>
+                <BasicButton onClick={() => navigate('/auth/forgetpassword')} text="Change Password" />
+                <AccentButton text="Delete My Account" />
 
             </div>
 
