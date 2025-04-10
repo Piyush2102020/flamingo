@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     font-size: 1.1;
-    width: 30vw;
+    width: 400px;
     gap: var(--gap-medium);
     border-bottom: 2px solid var(--color-text-light);
     background-color: var(--color-element);

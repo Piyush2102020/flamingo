@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/file";
 import './style.css'
 import Header from "../../components/header/file";
-import SideBarContainer from "../../components/sidebars/sidebarContainer/file";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +46,6 @@ export default function Dashboard() {
                     <Outlet />
                 </div>
 
-                <ConditionalRendererWithoutDefault condition={!isMobile} component={<SideBarContainer />} />
 
             </div>
 

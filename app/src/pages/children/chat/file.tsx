@@ -16,6 +16,8 @@ export default function Chat() {
 
   const fetchChats = async () => {
     const allChats = await axiosInstance.get('/inbox') as any;
+    console.log(allChats);
+    
     dispatch(addUsersInInbox(allChats));
   }
   useEffect(() => {

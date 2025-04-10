@@ -5,6 +5,7 @@ const slice = createSlice(
         name: 'context',
         initialState: {
             userData: {},
+            theme:true,
             comment: {
                 commentBoxId: "",
                 isVisible: false,
@@ -37,6 +38,7 @@ const slice = createSlice(
             toggleNotification: (state) => { state.newNotification = !state.newNotification },
             toggleMessage: (state) => { state.newMessage = !state.newMessage },
             setIsMobile: (state, action: PayloadAction<boolean>) => { state.isMobile = action.payload },
+            changeTheme:(state)=>{state.theme=!state.theme},
             setCommentBoxHint: (state, action: PayloadAction<string>) => { state.comment.hint = action.payload },
 
             changeCommentInput: (state, action: PayloadAction<string>) => {
@@ -71,5 +73,5 @@ const slice = createSlice(
 )
 
 
-export const { updateChatboxMeta,setCommentBoxHint, addComments, addData, setCommentBoxID, changeParentId, changeCommentInput, toggleCommentBox, setPostId, setParentId, toggleNotification, toggleMessage, setIsMobile, addUsersInInbox } = slice.actions;
+export const { changeTheme,updateChatboxMeta,setCommentBoxHint, addComments, addData, setCommentBoxID, changeParentId, changeCommentInput, toggleCommentBox, setPostId, setParentId, toggleNotification, toggleMessage, setIsMobile, addUsersInInbox } = slice.actions;
 export default slice.reducer;

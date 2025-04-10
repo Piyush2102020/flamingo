@@ -16,7 +16,7 @@ type GenericLoaderConfig = {
 }
 
 
-export const GenericLazyLoader: React.FC<GenericLoaderConfig> = ({ url, Element, style, className, mapFunction ,reversed={true}}) => {
+export const GenericLazyLoader: React.FC<GenericLoaderConfig> = ({ url, Element, style, className, mapFunction ,reversed=true}) => {
     const [items, setItems] = useState<[]>([]);
     const [page, setPage] = useState<number>(1);
     const [hasMore, setHasMore] = useState<boolean>(true);

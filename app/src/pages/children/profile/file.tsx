@@ -3,7 +3,6 @@ import './style.css'
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../helpers/store';
-import GenericLoader from '../../../components/GenericLoader/file';
 import axiosInstance from '../../../helpers/axiosModified';
 import PostComponent from '../../../components/postComponent/file';
 import { updateChatboxMeta } from '../../../helpers/slice';
@@ -11,6 +10,7 @@ import { MediumImage, SmallIcon } from '../../../newComponents/Clickables/icons/
 import { Holder } from '../../../newComponents/Generics/GenericHolders/file';
 import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from '../../../newComponents/Generics/GenericConditionlRender/file';
 import { AccentButton, BasicButton } from '../../../newComponents/Clickables/buttons/file';
+import { GenericLazyLoader } from '../../../newComponents/Generics/GenericLazyLoader/file';
 
 export default function Profile() {
     const [params] = useSearchParams();
@@ -124,13 +124,13 @@ export default function Profile() {
                     component={
                         <ConditionalRendererWithDefault
                             condition={profileData._id}
-                            component={<GenericLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
+                            component={<GenericLazyLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
                             defaultComponent="Loading Posts..." />
                     }
                     defaultComponent={
                         <ConditionalRendererWithDefault
                             condition={profileData.isFollowing}
-                            component={<GenericLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
+                            component={<GenericLazyLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
                             defaultComponent={<Holder classname='private-account' >
 
                                 <div style={{ padding: "var(--padding-small)", border: "1px dashed currentColor", borderRadius: "50%", width: "40px", height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }} className='lock-icon'>

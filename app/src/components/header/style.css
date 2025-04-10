@@ -1,5 +1,7 @@
 .header{
     padding: var(--padding-medium);
+    display: flex;
+    justify-content: space-between;
 }
 
 .header .appname{

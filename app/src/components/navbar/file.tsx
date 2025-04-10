@@ -8,7 +8,7 @@ import {  toggleMessage, toggleNotification } from "../../helpers/slice";
 export default function Navbar({style}:{style:CSSProperties}) {
     const navigate = useNavigate();
     const location = useLocation();
-    const [selectedTab, setSelectedTab] = useState(location.pathname.replace("/dashboard/", "") || "home");
+    const [selectedTab, setSelectedTab] = useState("home");
     const userData = useSelector((state: RootState) => state.context.userData) as any;
     const context=useSelector((state:RootState)=>state.context);
     const dispatch=useDispatch();

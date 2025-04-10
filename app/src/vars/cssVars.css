@@ -6,6 +6,7 @@
     --color-text-light: color-mix(in srgb, var(--color-text) 50%, transparent);
     --shadow: 0px 10px 10px rgba(0, 0, 0, 0.262);
     --color-text-on-accent: white;
+    --color-comment-box:rgb(203, 203, 203);
 
     --flamingo: #bb4160;
     --flamingo-dark: #8B2E3F;
@@ -42,14 +43,14 @@
 }
 
 /* Dark Mode Variables */
-:root {
+:root[data-theme="dark"] {
     --color-background: black;
     --color-element: transparent;
     --color-text: white;
-    --color-text-light: color-mix(in srgb, var(--color-text) 50%, transparent);
+    --color-text-light: color-mix(in srgb, var(--color-text) 80%, transparent);
     --color-accent: rgb(103, 5, 48);
     --shadow: rgb(115, 115, 115);
-    --color-comment-box:rgb(36, 36, 36);
+    --color-comment-box:rgb(38, 38, 38);
 }
 
 @font-face {
@@ -123,6 +124,7 @@ body {
 
 .accent{
     background-color: var(--flamingo);
+    color: var(--color-text-on-accent);
 }
 
 .dp-small{

@@ -26,23 +26,11 @@ exports.Auth = async (req, res, next) => {
 
         if (!type || !["create", "login"].includes(type))return next(new ApiError(STATUS_CODES.BAD_REQUEST, "Invalid request type"));
 
-        const filtered= await UserModel.aggregate([{$match:{ 
-            $or: [{ email }, { username }] 
-        }},
-        {$addFields:{
-            followersCount:{$size:"$followers"},
-            followingCount:{$size:"$following"},
-        }},
-        {$project:{
-            posts:0,
-            followers:0,
-            following:0
-        }}
-    ]);
+        const isAvailable= await UserModel.findOne({$or:[{email},{username}]},{email:1,username:1,password:1});
+        console.log(isAvailable);
+        
 
-
-
-    const isAvailable=filtered.length>0?filtered[0]:null;
+    
         if (type === "create") {
             if (isAvailable) {
                 const errorMessage = isAvailable.email === email ? 
@@ -64,7 +52,7 @@ exports.Auth = async (req, res, next) => {
 
             if (!passMatched) return next(new ApiError(STATUS_CODES.UNAUTHORIZED, "Username or Password Incorrect"));
 
-            const data = isAvailable;
+            const data = isAvailable.toObject();
             delete data.password;
             const token = await generateToken(data);
 

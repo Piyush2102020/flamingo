@@ -13,6 +13,7 @@
 
 .receiver{
     width: 60%;
+    color: var(--color-text-on-accent);
 }
 
 .background-sender{
@@ -22,4 +23,5 @@
 
 .background-receiver{
     background-color: var(--flamingo);
+    color: var(--color-text-on-accent);
 }

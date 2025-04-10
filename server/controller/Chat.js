@@ -12,6 +12,8 @@ const { Message, ChatModel }=require('../models/ChatModels');
  */
 exports.getUsersInInbox = async (req, res, next) => {
   try {
+
+
     const chats = await UserModel.aggregate([
       {
         $match: {
@@ -56,7 +58,7 @@ exports.getUsersInInbox = async (req, res, next) => {
         },
       },
     ]);
-
+    console.log(chats);
     response(res, "acknowledged", chats || []);
   } catch (e) {
     next(e);

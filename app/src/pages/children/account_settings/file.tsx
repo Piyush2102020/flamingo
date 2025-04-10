@@ -53,7 +53,7 @@ export default function Settings() {
            }
             <div style={{ position: "relative" }}>
                 <input onChange={handlePicChange} type="file" accept="image/*" style={{ position: "absolute", opacity: "0", width: "100%", height: "100%" }} />
-                <MediumImage imgPath={localData.profdilePicture} />
+                <MediumImage imgPath={localData.profilePicture} />
             </div>
 
             <TextHint text="Tap here to change" />

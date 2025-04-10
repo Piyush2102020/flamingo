@@ -7,7 +7,7 @@ import axiosInstance from '../../helpers/axiosModified';
 import { useEffect} from 'react';
 import CommentLayout from '../comment-layout/file';
 import { BasicInputField } from '../../newComponents/Clickables/fields/file';
-import { AccentButton, BasicButton } from '../../newComponents/Clickables/buttons/file';
+import {  BasicButton } from '../../newComponents/Clickables/buttons/file';
 import { Holder } from '../../newComponents/Generics/GenericHolders/file';
 import { ConditionalRendererWithoutDefault } from '../../newComponents/Generics/GenericConditionlRender/file';
 import { TextHint } from '../../newComponents/Generics/GenericText/file';

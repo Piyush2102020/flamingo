@@ -22,6 +22,7 @@ export const ReceiverMessageLayout=({item}:LayoutProps)=>{
             <Holder classname={`base-message background-receiver`}>
                 {item.text}
                 <TextHint style={{
+                    color:"var(--color-text-on-accent)",
                     margin:"2px",
                     width:"95%",
                     textAlign:"right"
