@@ -4,6 +4,10 @@ import axiosInstance from "../../helpers/axiosModified";
 import { changeCommentInput, setCommentBoxHint, setParentId } from "../../helpers/slice";
 import { useDispatch } from "react-redux";
 import './style.css'
+import { Holder } from "../../newComponents/Generics/GenericHolders/file";
+import { GenericHeader } from "../../newComponents/Generics/GenericHeader/file";
+import { TextHint } from "../../newComponents/Generics/GenericText/file";
+import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
 interface CommentProps {
   item: {
     userId: string;
@@ -36,30 +40,41 @@ export default function CommentLayout({ item, onClick, isReply = false }: { item
   }
 
   return (
-    <div className={`comment-box-replies-container ${isReply ? 'scale' : ""}`}>
-      <div className="comment-box-layout" >
 
-        <img className="dp-small" src={item.userData.profilePicture ? item.userData.profilePicture : "/icons/profile-default.svg"} />
-        <div style={{ display: "flex", width: "fit-content", flexDirection: "column", gap: "var(--gap-medium)" }}>
 
-          <span style={{ display: "flex", gap: "var(--gap-medium)", alignItems: "center" }}><strong>{item.userData.username}</strong><p className="text-light">{timeAgo(item.createdAt)}</p></span>
-          <p className="comment-content">{item.content}</p>
-          <div style={{ display: "flex", gap: "var(--gap-medium)" }}><h1 onClick={onClick} className="text-light">Add Reply</h1>{!isReply && <h1 onClick={addReplies} className="text-light">View Replies</h1>}</div>
+    <Holder
+      style={{ padding: "var(--padding-medium)" }}
+      direction="vertical">
+      <GenericHeader
+      style={{justifyContent:"flex-start"}}
+        imagePath={item.userData.profilePicture}
+        headText={item.userData.username}
+        clickType="text"
+        showIcon={false}
+        content={item.content}
+        timestamp={item.createdAt}
+        component={<Holder>
+          <Holder  direction="horizontal">
+          <TextHint onClick={onClick} text="Add Reply" />
+          <ConditionalRendererWithoutDefault
+          condition={!isReply}
+          component={<TextHint onClick={addReplies} text="View Replies" />}
+          />
+          
+          </Holder>
+          <Holder>
 
-        </div>
-
-      </div>
-      <div style={{ marginLeft: '70px' }}>
-        <div style={{ borderLeft: '1px solid var(--color-text-light)' }}>
-          {replies.length > 0 && replies.map((value) => <CommentLayout item={value} onClick={() => {
+          {replies.length > 0 && replies.map((value:any,index) => <CommentLayout key={index} item={value} onClick={() => {
             dispatch(setCommentBoxHint(`Replying to @${value.userData.username}`));
             dispatch(changeCommentInput(`@${value.userData.username}`));
             dispatch(setParentId(value.parentId));
           }} isReply={true} />)}
-        </div>
+          </Holder>
 
-      </div>
-    </div>
+        </Holder>}
+      ></GenericHeader>
 
+
+    </Holder>
   );
 }

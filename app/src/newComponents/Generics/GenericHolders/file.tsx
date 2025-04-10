@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import './style.css';
 
 type HolderProps = {
   children: React.ReactNode;
   direction?: 'vertical' | 'horizontal';
   classname?:string;
+  onClick?:()=>void;
+  style?:CSSProperties
 };
 
-export const Holder: React.FC<HolderProps> = ({ classname,children, direction = 'vertical' }) => {
+export const Holder: React.FC<HolderProps> = ({ style,onClick,classname,children, direction = 'vertical' }) => {
   return (
-    <div className={`holder ${direction} ${classname}`}>
+    <div style={style} onClick={onClick} className={`holder ${direction} ${classname}`}>
       {children}
     </div>
   );

@@ -8,8 +8,7 @@ import Search from "../pages/children/search/file";
 import AddPost from "../pages/children/add/file";
 import Chat from "../pages/children/chat/file";
 import Profile from "../pages/children/profile/file";
-import ChatBox from "../components/chatbox/file";
-import TabLayout from "../components/tabLayout/file";
+
 import Pnf from "../components/pnf/file";
 import Forgetpassword from "../pages/passwordReset/file";
 import Notifications from "../pages/children/notification/file";
@@ -40,7 +39,6 @@ export default function Routes() {
                 { path: "direct", element: <Chat /> },
                 { path: "profile", element: <Profile /> },
                 { path: "chatbox", element: <RealtimeChatBox/> },
-                { path: "info", element: <TabLayout /> },
                 { path: "notification" ,element:<Notifications/>},
                 {path:"settings",element:<Settings/>},
             ]

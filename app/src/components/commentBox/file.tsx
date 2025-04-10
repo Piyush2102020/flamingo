@@ -2,10 +2,9 @@
 import { useDispatch, useSelector } from 'react-redux'
 import './style.css'
 import { addComments, changeCommentInput, changeParentId, setCommentBoxHint, toggleCommentBox } from '../../helpers/slice';
-import GenericLoader from '../GenericLoader/file';
 import { RootState } from '../../helpers/store';
 import axiosInstance from '../../helpers/axiosModified';
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import CommentLayout from '../comment-layout/file';
 
 export default function CommentBox() {
@@ -20,8 +19,6 @@ export default function CommentBox() {
       disptach(addComments(comments));
     }
   }
-
-
 
 
   useEffect(() => {
@@ -41,7 +38,7 @@ export default function CommentBox() {
 
         <h1>Comments</h1>
         <div className='comments-container'>
-          {commentBoxState.comments.length > 0 && commentBoxState.comments.map((value: any) => <CommentLayout onClick={() => {
+          {commentBoxState.comments.length > 0 && commentBoxState.comments.map((value: any,index) => <CommentLayout key={index}  isReply={false} onClick={() => {
             disptach(setCommentBoxHint(`Replying to @${value.userData.username}`));
             disptach(changeCommentInput(`@${value.userData.username}`));
             disptach(changeParentId(value.parentId ? value.parentId : value._id));
