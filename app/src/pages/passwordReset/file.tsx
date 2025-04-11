@@ -1,10 +1,8 @@
-import { toast } from 'react-toastify';
-import './style.css';
 import axiosInstance from '../../helpers/axiosModified';
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { BasicInputField } from '../../newComponents/Clickables/fields/file';
-import { AccentButton, BasicButton } from '../../newComponents/Clickables/buttons/file';
+import { AccentButton} from '../../newComponents/Clickables/buttons/file';
 import { Holder } from '../../newComponents/Generics/GenericHolders/file';
 import { ConditionalRendererWithDefault } from '../../newComponents/Generics/GenericConditionlRender/file';
 

@@ -1,51 +1,47 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../helpers/store"
 import { useEffect, useState } from "react";
-import './style.css'
 import { getSocket } from "../../helpers/socketServer";
 import axiosInstance from "../../helpers/axiosModified";
 import { updateChatboxMeta } from "../../helpers/slice";
 import { ReceiverMessageLayout, SenderMessageLayout } from "../../newComponents/Clickables/messages/file";
+import { BasicInputField } from "../../newComponents/Clickables/fields/file";
+import { BasicButton } from "../../newComponents/Clickables/buttons/file";
+import { Holder } from "../../newComponents/Generics/GenericHolders/file";
 export default function RealtimeChatBox() {
-  const chatboxInfo=useSelector((state:RootState)=>state.context.chatbox);
-  const senderId=useSelector((state:RootState)=>state.context.userData) as any;
-  
+  const context=useSelector((state:RootState)=>state.context);
+
   const [messages,setMessages]=useState<[]>([]);
   const [inputMessage,setInputMessage]=useState("");
   const socket=getSocket();
   const dispatch=useDispatch();
 
   const loadMessage=async ()=>{
-    console.log("chatbox id : ",chatboxInfo.chatboxId);
-    
-    const oldMessages=await axiosInstance.get(`/getmessages/${chatboxInfo.chatboxId}`);
-    console.log("Old Messages", oldMessages);
+    const oldMessages=await axiosInstance.get(`/getmessages/${context.chatbox.chatboxId}`);
     setMessages(prev=>[...prev,...oldMessages]);
   }
 
   
   const sendMessage=()=>{
-    console.log("Sender Id : ",senderId._id);
-    
     socket.emit("message",{
-      senderId:senderId._id,
-      receiverId:chatboxInfo.receiverId,
+      senderId:context.userData._id,
+      receiverId:context.chatbox.receiverId,
       text:inputMessage,
-      chatboxId:chatboxInfo.chatboxId
+      chatboxId:context.chatbox.chatboxId
     });
     }
 
     useEffect(()=>{
-      if(chatboxInfo.chatboxId){
+      if(context.chatbox.chatboxId){
        loadMessage(); 
       }
       if(socket){
         socket.on('newMessage',(data:any)=>{
-          if(!chatboxInfo.chatboxId){
+          if(!context.chatbox.chatboxId){
             console.log("Setting chatbox id : ",data.chatboxId);
              dispatch(updateChatboxMeta({chatboxId:data.chatboxId}));
           }
-          if(data.chatboxId==chatboxInfo.chatboxId){
+          if(data.chatboxId==context.chatbox.chatboxId){
             setMessages(prev => [...prev, data.data]);
           }
         })
@@ -53,23 +49,27 @@ export default function RealtimeChatBox() {
 
       return ()=>{
         socket?.off('newMessage')}
-    },[socket,chatboxInfo])
+    },[socket,context.chatbox.chatboxId])
+
+
     return (<div className="chatbox-container">
 
-      <h2>{chatboxInfo.receiverUsername}</h2>
+      <h2>{context.chatbox.receiverUsername}</h2>
 
       <div className="messages">
         {messages?messages.map((value:any,index)=>{
-          value.isSender=value.senderId===senderId._id;
-          value.receiverProfilePicture=value.isSender?senderId.profilePicture:chatboxInfo.receiverProfilePicture;
           
-          console.log("New value : ",value);
+          value.isSender=value.senderId===context.userData._id;
+          value.receiverProfilePicture=value.isSender?context.userData.profilePicture:context.chatbox.receiverProfilePicture;
+
           return value.isSender?<SenderMessageLayout key={index} item={value}/>:<ReceiverMessageLayout key={index} item={value}/>}):"Start a conversation now"}
       </div>
 
-      <div className="input-field-container">
-        <input value={inputMessage} onChange={(e)=>setInputMessage(e.target.value)} placeholder="write a message" className="input"/>
-        <button onClick={sendMessage} className="btn accent">Send Message</button>
-      </div>
+        <Holder classname="input-field-container" direction="horizontal">
+        <BasicInputField value={inputMessage} onChange={(e)=>setInputMessage(e.target.value)} placeholder="write a message" />
+        <BasicButton onClick={sendMessage} text="Send Message"/>
+        </Holder>
+       
+
       </div>)
 }

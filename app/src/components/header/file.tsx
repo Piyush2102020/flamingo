@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { SmallIcon } from '../../newComponents/Clickables/icons/file'
-import './style.css'
 import { RootState } from '../../helpers/store'
 import { changeTheme } from '../../helpers/slice';
 import { useEffect } from 'react';

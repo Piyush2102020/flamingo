@@ -1,6 +1,4 @@
 import React, { CSSProperties } from 'react';
-import './style.css';
-
 type IconsProps = {
   icon?: React.ReactNode;
   imgPath?:string;

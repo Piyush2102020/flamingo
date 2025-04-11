@@ -1,6 +1,8 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../../components/navbar/file";
-import './style.css'
+import '../../components/componentsGlobal.css'
+import '../../newComponents/newComponents.css'
+import '../pageGlobal.css'
 import Header from "../../components/header/file";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
@@ -14,9 +16,9 @@ import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/
 export default function Dashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const commentBoxVisibility = useSelector((state: RootState) => state.context.comment.isVisible);
-    const isMobile = useSelector((state: RootState) => state.context.isMobile);
-    const currentUser = useSelector((state: RootState) => state.context.userData);
+
+    const context=useSelector((state:RootState)=>state.context) as any;
+
     Responsive();
     useEffect(() => {
         if (!window.location.pathname.includes('home')) {
@@ -30,19 +32,20 @@ export default function Dashboard() {
     }, []);
 
     useEffect(() => {
-        startSocket(currentUser._id)
-    }, [currentUser])
+        if(!context.userData._id)return;
+        startSocket(context.userData._id)
+    }, [context.userData._id]);
 
     return (
 
 
         <div className="dashboard-container">
-            <ConditionalRendererWithoutDefault condition={commentBoxVisibility} component={<CommentBox />} />
+            <ConditionalRendererWithoutDefault condition={context.comment.isVisible} component={<CommentBox />} />
             <Header />
 
-            <div style={isMobile ? { flexDirection: "column-reverse" } : {}} className="dashboard-section">
-                <Navbar style={isMobile ? { position: "fixed", bottom: "0px", backgroundColor: "var(--color-background)", zIndex: "200", flexDirection: "row" } : {}} />
-                <div style={isMobile ? { width: window.innerWidth } : {}} className="outlet-container">
+            <div style={context.isMobile ? { flexDirection: "column-reverse" } : {}} className="dashboard-section">
+                <Navbar style={context.isMobile ? { position: "fixed", bottom: "0px", backgroundColor: "var(--color-background)", zIndex: "200", flexDirection: "row" } : {}} />
+                <div style={context.isMobile ? { width: window.innerWidth } : {}} className="outlet-container">
                     <Outlet />
                 </div>
 

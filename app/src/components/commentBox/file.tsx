@@ -1,6 +1,4 @@
-
 import { useDispatch, useSelector } from 'react-redux'
-import './style.css'
 import { addComments, changeCommentInput, changeParentId, setCommentBoxHint, toggleCommentBox } from '../../helpers/slice';
 import { RootState } from '../../helpers/store';
 import axiosInstance from '../../helpers/axiosModified';
@@ -28,7 +26,7 @@ export default function CommentBox() {
 
   useEffect(() => {
     loadComments();
-  }, [])
+  }, []);
 
   const addComment = async () => {
   

@@ -1,5 +1,4 @@
 import React, { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
-import './style.css'
 import axiosInstance from '../../../helpers/axiosModified';
 import { Holder } from '../GenericHolders/file';
 import { ConditionalRendererWithDefault } from '../GenericConditionlRender/file';

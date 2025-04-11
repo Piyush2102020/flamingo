@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import './style.css'
 import axiosInstance from '../../../helpers/axiosModified';
 import { useNavigate } from 'react-router-dom';
 import { SmallIcon } from '../../../newComponents/Clickables/icons/file';

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './style.css';
 import axiosInstance from '../../../helpers/axiosModified';
 import { TextHint } from '../../../newComponents/Generics/GenericText/file';
 import { Holder } from '../../../newComponents/Generics/GenericHolders/file';

@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../../helpers/store"
-
-import './style.css'
 import React, { useState } from "react";
 import axiosInstance from "../../../helpers/axiosModified";
 import { addData } from "../../../helpers/slice";

@@ -2,7 +2,6 @@ import  { useState } from "react";
 import axiosInstance from "../../helpers/axiosModified";
 import { changeCommentInput, setCommentBoxHint, setParentId } from "../../helpers/slice";
 import { useDispatch } from "react-redux";
-import './style.css'
 import { Holder } from "../../newComponents/Generics/GenericHolders/file";
 import { GenericHeader } from "../../newComponents/Generics/GenericHeader/file";
 import { TextHint } from "../../newComponents/Generics/GenericText/file";
@@ -15,7 +14,6 @@ export default function CommentLayout({ item, onClick, isReply = false }: { item
 
   const loadReplies = async () => {
     const response = await axiosInstance.get(`/content/${item.postId}/comments/${item._id}`) as [];
-    console.log("Childs : ", response);
     setReplies(response);
   }
 

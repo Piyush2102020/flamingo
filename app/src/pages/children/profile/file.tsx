@@ -1,5 +1,4 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import './style.css'
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../helpers/store';
@@ -17,9 +16,10 @@ export default function Profile() {
     const user = params.get('user');
     const userId = useMemo(() => user?.split("-")[1], [user]);
     const [profileData, setProfileData] = useState<any>({});
-    const userData = useSelector((state: RootState) => state.context.userData) as any;
-    const inboxes = useSelector((state: RootState) => state.context.inbox);
-    const isOwnProfile = userData._id === userId;
+
+    const context=useSelector((state:RootState)=>state.context) as any;
+
+    const isOwnProfile = context.userData._id === userId;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -28,7 +28,11 @@ export default function Profile() {
         setProfileData(response);
     }
 
-
+    const memoizedUrl = useMemo(() => {
+        if (!profileData._id) return "";
+        return `/content?type=user&uid=${profileData._id}`;
+    }, [profileData._id]);
+    
 
     const handleAction = async () => {
         let action = profileData.isFollowing ? "unfollow" : "follow";
@@ -38,12 +42,9 @@ export default function Profile() {
     }
 
     useEffect(() => {
-        console.log(userId);
         if (userId) {
             fetchUserData(userId);
         }
-
-
 
     }, [userId, params]);
     return (
@@ -91,7 +92,7 @@ export default function Profile() {
                         <BasicButton
                             onClick={() => {
                                 dispatch(updateChatboxMeta({ chatboxId: "" }));
-                                for (let val of inboxes as any) {
+                                for (let val of context.inbox as any) {
                                     if (val.userId === profileData._id) {
                                         console.log("User found adding chat");
                                         dispatch(updateChatboxMeta({
@@ -124,13 +125,13 @@ export default function Profile() {
                     component={
                         <ConditionalRendererWithDefault
                             condition={profileData._id}
-                            component={<GenericLazyLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
+                            component={<GenericLazyLoader url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent="Loading Posts..." />
                     }
                     defaultComponent={
                         <ConditionalRendererWithDefault
                             condition={profileData.isFollowing}
-                            component={<GenericLazyLoader url={`/content?type=user&uid=${profileData._id}`} Element={PostComponent} />}
+                            component={<GenericLazyLoader url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent={<Holder classname='private-account' >
 
                                 <div style={{ padding: "var(--padding-small)", border: "1px dashed currentColor", borderRadius: "50%", width: "40px", height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }} className='lock-icon'>

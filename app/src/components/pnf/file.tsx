@@ -1,4 +1,3 @@
-import './style.css'
 export default function Pnf({text}:{text:string}){
     return(
         <div className="pnf">

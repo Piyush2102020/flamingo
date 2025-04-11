@@ -1,3 +1,9 @@
+.image{
+    margin-right: 5px;
+}
+
+/* Messages */
+
 .base-message{
     
     padding: var(--padding-medium);
@@ -24,4 +30,33 @@
 .background-receiver{
     background-color: var(--flamingo);
     color: var(--color-text-on-accent);
+}
+
+
+/* Holder */
+
+.holder{
+    width: 100%;
+    gap: var(--gap-small);
+}
+.vertical{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.horizontal{
+    display: flex;
+    flex-direction: row;
+   
+}
+
+
+
+/* Lazy laoder */
+.observer{
+    width: 100%;
+    height: 100px;
+    background-color: aqua;
 }

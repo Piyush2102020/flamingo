@@ -26,7 +26,7 @@ exports.Auth = async (req, res, next) => {
 
         if (!type || !["create", "login"].includes(type))return next(new ApiError(STATUS_CODES.BAD_REQUEST, "Invalid request type"));
 
-        const isAvailable= await UserModel.findOne({$or:[{email},{username}]},{email:1,username:1,password:1});
+        const isAvailable= await UserModel.findOne({$or:[{email},{username}]},{email:1,username:1,password:1,profilePicture:1});
         console.log(isAvailable);
         
 

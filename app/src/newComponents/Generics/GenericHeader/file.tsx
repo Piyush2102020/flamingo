@@ -1,5 +1,4 @@
 import React, { CSSProperties } from 'react'
-import './style.css'
 import { Holder } from '../GenericHolders/file';
 import { SmallIcon, SmallImage } from '../../Clickables/icons/file';
 import { ClickableBoldText } from '../../Clickables/text/file';

@@ -1,4 +1,4 @@
-import './style.css'
+
 import { Holder } from '../../Generics/GenericHolders/file';
 import { SmallImage } from '../icons/file';
 import { TextHint } from '../../Generics/GenericText/file';
@@ -39,6 +39,7 @@ export const ReceiverMessageLayout=({item}:LayoutProps)=>{
 
 
 export const SenderMessageLayout=({item}:LayoutProps)=>{
+
     return(
         <Holder classname='sender'  direction='horizontal'>
            

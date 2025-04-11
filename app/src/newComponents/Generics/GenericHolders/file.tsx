@@ -1,5 +1,4 @@
 import React, { CSSProperties } from 'react';
-import './style.css';
 
 type HolderProps = {
   children: React.ReactNode;

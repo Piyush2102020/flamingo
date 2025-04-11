@@ -5,7 +5,7 @@ const slice = createSlice(
         name: 'context',
         initialState: {
             userData: {},
-            theme:true,
+            theme:false,
             comment: {
                 commentBoxId: "",
                 isVisible: false,

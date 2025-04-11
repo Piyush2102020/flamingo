@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react'
-import './style.css'
+
 
 
 

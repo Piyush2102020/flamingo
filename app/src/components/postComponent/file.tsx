@@ -1,5 +1,5 @@
 import { useState } from "react";
-import './style.css'
+
 import axiosInstance from "../../helpers/axiosModified";
 import { useDispatch } from "react-redux";
 import { addComments, setPostId, toggleCommentBox } from "../../helpers/slice";

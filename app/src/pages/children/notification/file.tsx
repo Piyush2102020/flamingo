@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
 import axiosInstance from "../../../helpers/axiosModified";
-import NotificationLayout from "../../../components/notification-layout/file";
-import './style.css'
 import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/file";
 export default function Notifications(){
     const [notifications,setNotification]=useState<[any]|null>(null);

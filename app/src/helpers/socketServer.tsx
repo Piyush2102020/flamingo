@@ -1,12 +1,12 @@
 import { io } from "socket.io-client";
 
-const socketUrl = 'http://localhost:5000';
+
 
 let socket: any = null;
 
 export default function startSocket(userId: string) {
   if (!userId) return null; 
-  socket = io(socketUrl, {
+  socket = io(import.meta.env.VITE_BASE_URL, {
     query: { id: userId }
   });
 

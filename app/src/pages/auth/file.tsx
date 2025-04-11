@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import axiosInstance from "../../helpers/axiosModified";
 import { toast } from "react-toastify";
-import './style.css';
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { BasicInputField } from "../../newComponents/Clickables/fields/file";
-import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
+import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
 import { AccentButton } from "../../newComponents/Clickables/buttons/file";
 import { ClickablePara } from "../../newComponents/Clickables/text/file";
 
@@ -64,6 +63,7 @@ export default function Auth() {
 
     const handleSuccess = (response: any) => {
         const token = response.credential;
+       
         const userData = jwtDecode(token) as any;
         setData(formData => {
             formData.name = userData.name;

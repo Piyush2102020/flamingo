@@ -1,6 +1,4 @@
 import React, { CSSProperties } from 'react';
-import './style.css'
-
 
 type FieldItems={
     value:string;
