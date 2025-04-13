@@ -20,24 +20,30 @@ const UserModel = require('../models/UserModel');
 exports.MakePost = async (req, res, next) => {
     try {
         let mediaUrl = '';
+        const resourceType = req.file.mimetype.startsWith('video') ? "video" : "image";
         const uploadStream = cloudinary.uploader.upload_stream(
-                { folder: "/flamingo_posts" },
-                async (error, result) => {
-                    if (error) {
-                        return next(error);
-                    }
-                    mediaUrl = result.secure_url;
-                    const newPost = new PostModel({
-                        userId: req.user._id,
-                        media: mediaUrl,
-                        ...req.body
-                    });
-                    await newPost.save();
-                    await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id),{$inc:{postCount:1}});
-                    response(res, "Post Created");
+            {
+                folder: "/flamingo_posts",
+                resource_type: resourceType
+            },
+
+            async (error, result) => {
+                if (error) {
+                    return next(error);
                 }
-            );
-            streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+                mediaUrl = result.secure_url;
+                const newPost = new PostModel({
+                    userId: req.user._id,
+                    media: mediaUrl,
+                    mediaType: resourceType,
+                    ...req.body
+                });
+                await newPost.save();
+                await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id), { $inc: { postCount: 1 } });
+                response(res, "Post Created");
+            }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
     } catch (e) {
         next(e);
     }
@@ -56,7 +62,7 @@ exports.RetrievePost = async (req, res, next) => {
         let limit = 2;
         const { page = 1, uid, type } = req.query;
         console.log(req.query);
-        
+
         let filter = {};
         if (type === 'feed' && !uid) {
             filter = {};
@@ -65,7 +71,7 @@ exports.RetrievePost = async (req, res, next) => {
         } else {
             throw new ApiError(405, "Method Not Allowed");
         }
-    
+
 
         const posts = await PostModel.aggregate([
             { $match: filter },
@@ -87,13 +93,17 @@ exports.RetrievePost = async (req, res, next) => {
                         }
                     }]
                 }
-            }, { $unwind: { path: "$userData", preserveNullAndEmptyArrays: true } }, 
-            { $addFields: { likesCount: { $size: "$likes" },
-            isLiked: { $in: [new mongoose.Types.ObjectId(req.user._id), "$likes"] }  } },
-            { $project: { likes: 0, comments: 0, updatedAt: 0, __v: 0,userId:0} }
+            }, { $unwind: { path: "$userData", preserveNullAndEmptyArrays: true } },
+            {
+                $addFields: {
+                    likesCount: { $size: "$likes" },
+                    isLiked: { $in: [new mongoose.Types.ObjectId(req.user._id), "$likes"] }
+                }
+            },
+            { $project: { likes: 0, comments: 0, updatedAt: 0, __v: 0, userId: 0 } }
         ]);
 
-      
+
         response(res, "acknowledged", posts);
     }
     catch (e) {
@@ -114,7 +124,7 @@ exports.AddComment = async (req, res, next) => {
         const { postId, parentId } = req.params;
         const newComment = new CommentModel({ postId: postId, parentId: parentId, userId: req.user._id, content: req.body.content });
         await newComment.save()
-        response(res,"acknowledged")
+        response(res, "acknowledged")
 
     } catch (e) {
         next(e);
@@ -134,12 +144,16 @@ exports.GetComments = async (req, res, next) => {
     const currentPage = Number(req.query.page) || 1;
     let limit = 20;
     let skipCount = (currentPage - 1) * limit;
-    let filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )},{parentId:null}] } }
+    let filter = { $match: { $and: [{ postId: new mongoose.Types.ObjectId(postId) }, { parentId: null }] } }
     try {
-        if(parentId){
-            if(mongoose.isValidObjectId(parentId)){
-                filter = { $match: { $and: [{ postId:new mongoose.Types.ObjectId( postId )}, 
-                    { parentId:new mongoose.Types.ObjectId( parentId)}] } }         
+        if (parentId) {
+            if (mongoose.isValidObjectId(parentId)) {
+                filter = {
+                    $match: {
+                        $and: [{ postId: new mongoose.Types.ObjectId(postId) },
+                        { parentId: new mongoose.Types.ObjectId(parentId) }]
+                    }
+                }
             }
         }
 
@@ -163,17 +177,19 @@ exports.GetComments = async (req, res, next) => {
                         }
                     }]
                 }
-            },{$unwind:{path:"$userData"}},
-            {$addFields:{likesCount:{$size:"$likes"}}},
-            {$project:{
-                updatedAt:0,
-                __v:0,
-                likes:0
-            }}
+            }, { $unwind: { path: "$userData" } },
+            { $addFields: { likesCount: { $size: "$likes" } } },
+            {
+                $project: {
+                    updatedAt: 0,
+                    __v: 0,
+                    likes: 0
+                }
+            }
         ])
 
-            response(res,"acknowledged",comments);
-  
+        response(res, "acknowledged", comments);
+
 
 
     } catch (e) {

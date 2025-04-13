@@ -48,7 +48,7 @@ export default function CommentBox() {
           }} item={value} />)}
         </div>
 
-        <div style={{ width: '100%',justifyContent:"center",alignItems:"center" }}>
+        <div style={{ width: '70%',justifyContent:"center",alignItems:"center" }}>
           <ConditionalRendererWithoutDefault
             condition={!!commentBoxState.hint.trim()}
             component={<TextHint text={commentBoxState.hint} />}

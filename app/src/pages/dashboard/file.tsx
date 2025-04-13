@@ -42,16 +42,17 @@ export default function Dashboard() {
         <div className="dashboard-container">
            
             <Header />
-
+            <ConditionalRendererWithoutDefault condition={context.comment.isVisible} component={<CommentBox />} />
             <div style={context.isMobile ? { flexDirection: "column-reverse" } : {}} className="dashboard-section">
                 <Navbar style={context.isMobile ? { position: "fixed", bottom: "0px", backgroundColor: "var(--color-background)", zIndex: "200", flexDirection: "row" } : {}} />
-                <ConditionalRendererWithoutDefault condition={context.comment.isVisible} component={<CommentBox />} />
-                <div style={context.isMobile ? { width: window.innerWidth } : {}} className="outlet-container">
+
+                <div style={context.isMobile ? { width: window.innerWidth } : {}} className="outlet-container">    
                     <Outlet />
+                    
                 </div>
-
-
+               
             </div>
+            
 
 
         </div>

@@ -26,6 +26,7 @@ const postSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true }, 
     content: { type: String,default:''}, 
     media: { type: String, default: null }, 
+    mediaType:{type:String,default:"image"},
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default: [], index: true }], 
     tags: [{ type: String, default: [], index: true }], 
     visibility: { type: String, enum: ["public", "private", "friends"], default: "public", index: true } 

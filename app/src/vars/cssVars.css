@@ -71,10 +71,15 @@
     box-sizing: border-box;
     pointer-events: auto; 
     user-select: none; 
+    font-size: 1rem;
     color: var(--color-text);
 }
 
-
+@media (max-width:400px) {
+    *{
+     font-size: 0.9rem;   
+    }
+}
 
 
 body {

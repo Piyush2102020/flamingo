@@ -78,7 +78,7 @@ routes.post('/updateprofilepicture',upload.single('image'), updateProfilePicture
 routes.get('/notification',Notifications)
 
 /// 🔹 **Post Routes**
-routes.route('/content').get(RetrievePost).post(upload.single('image'), MakePost);
+routes.route('/content').get(RetrievePost).post(upload.single('media'), MakePost);
 routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddComment);
 routes.post('/content/:id', Interact);
 
