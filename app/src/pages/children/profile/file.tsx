@@ -125,13 +125,13 @@ export default function Profile() {
                     component={
                         <ConditionalRendererWithDefault
                             condition={profileData._id}
-                            component={<GenericLazyLoader url={memoizedUrl} Element={PostComponent} />}
+                            component={<GenericLazyLoader  style={{justifyContent:"center"}} url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent="Loading Posts..." />
                     }
                     defaultComponent={
                         <ConditionalRendererWithDefault
                             condition={profileData.isFollowing}
-                            component={<GenericLazyLoader url={memoizedUrl} Element={PostComponent} />}
+                            component={<GenericLazyLoader style={{justifyContent:"center"}} url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent={<Holder classname='private-account' >
 
                                 <div style={{ padding: "var(--padding-small)", border: "1px dashed currentColor", borderRadius: "50%", width: "40px", height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }} className='lock-icon'>

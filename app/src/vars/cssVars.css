@@ -125,6 +125,7 @@ body {
 .accent{
     background-color: var(--flamingo);
     color: var(--color-text-on-accent);
+ 
 }
 
 .dp-small{

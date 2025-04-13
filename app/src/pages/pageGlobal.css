@@ -190,7 +190,6 @@
     flex-direction: column;
     gap: var(--gap-large);
     justify-content: center;
-    width: 100%;
     align-items: center;
  
 }
@@ -201,7 +200,7 @@
     align-items: center;
     gap: var(--gap-large);
     justify-content: center;
-    width: 100%;
+    flex-grow: 1;
     border-bottom: 1px solid var(--color-text-light);
     padding: var(--padding-large);
 }
@@ -210,6 +209,11 @@
     display: flex;
     gap: var(--gap-medium);
     flex-direction: column;
+}
+
+.profile-content-display{
+    width: 100%;
+
 }
 
 .profile-text p{font-size: 14px;

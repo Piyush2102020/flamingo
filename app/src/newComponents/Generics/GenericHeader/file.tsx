@@ -32,7 +32,7 @@ export const GenericHeader: React.FC<HeaderProps> = ({ component,style,decorate=
     return (
         <Holder classname={classname} style={style} onClick={clickType=='header'?onClick:undefined}  direction='horizontal'>
             <SmallImage imgPath={imagePath} />
-            <Holder>
+            <Holder style={{justifyContent:"normal"}}>
                 <Holder style={{alignItems:"center"}} direction='horizontal'>
                     <ClickableBoldText onClick={clickType == 'text' ? onClick : undefined} text={headText} />
                     <ConditionalRendererWithoutDefault

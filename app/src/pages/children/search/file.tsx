@@ -44,6 +44,7 @@ export default function Search() {
             <Holder classname='user-display'>
                 {query.trim()&&
                 user.map((value,index)=><GenericHeader
+                style={{alignItems:"normal"}}
                 key={index}
                 clickType='header'
                 headText={value.username}
