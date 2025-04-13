@@ -2,7 +2,7 @@ import { CSSProperties, useState } from "react";
 import { useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../helpers/store";
-import {  toggleMessage, toggleNotification } from "../../helpers/slice";
+import {  toggleCommentBox, toggleMessage, toggleNotification } from "../../helpers/slice";
 
 export default function Navbar({style}:{style:CSSProperties}) {
     const navigate = useNavigate();
@@ -11,6 +11,9 @@ export default function Navbar({style}:{style:CSSProperties}) {
     const dispatch=useDispatch();
 
     const handleSelection = (route: string) => {
+        if(context.comment.isVisible){
+            dispatch(toggleCommentBox());
+        }
         setSelectedTab(route);
         navigate(`/dashboard/${route}`);
     };

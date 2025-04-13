@@ -71,9 +71,8 @@
 .comment-box-container {
     width: 100%;
     z-index: 100;
-    height: 100vh;
     position: absolute;
-    display: flex;
+    height: 100%;
     flex-direction:column;
 }
 
@@ -85,7 +84,7 @@
 .comment-box {
     border-radius: var(--radius-large) var(--radius-large) 0px 0px;
     flex-grow: 1;
-    padding: var(--padding-large);
+    padding: var(--padding-small);
     display: flex;
     flex-direction: column;
     background-color: var(--color-comment-box);
@@ -107,6 +106,13 @@
     overflow-y: scroll;
 }
 
+
+@media (max-width:400px) {
+    .comments-container{
+        width: 100%;
+    }
+    
+}
 
 .comment-input .btn{
     width: 20%;
