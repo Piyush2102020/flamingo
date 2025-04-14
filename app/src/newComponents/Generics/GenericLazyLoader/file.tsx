@@ -64,7 +64,7 @@ export const GenericLazyLoader: React.FC<GenericLoaderConfig> = ({ url, Element,
             <ConditionalRendererWithDefault
                 condition={items.length == 0}
                 component={"Nothing For Now comback later"}
-                defaultComponent={<Holder>
+                defaultComponent={<Holder style={style}>
                     {items.map((value: any, index) => <Element item={value} key={index} />)}
                     {hasMore && <div ref={observerRef}
                         className='observer'></div>}

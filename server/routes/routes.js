@@ -46,7 +46,7 @@ const multer = require('multer');
 const { Auth, resetPassword, ChangePassword } = require('../controller/Auth');
 const { RetrievePost, MakePost, GetComments, AddComment } = require('../controller/Post');
 const { Interact } = require('../controller/interaction');
-const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications, updateProfilePicture } = require('../controller/User');
+const { userInfo, searchUser, updateProfile, profileInteraction, getAccData, Notifications, updateProfilePicture, getrequests, requestActions } = require('../controller/User');
 const { getUsersInInbox, getOldMessage} = require('../controller/Chat');
 const { SearchMusic } = require('../controller/music');
 
@@ -76,6 +76,7 @@ routes.route('/profile/:id').get(getAccData).put(profileInteraction);
 routes.post('/updateprofile', updateProfile);
 routes.post('/updateprofilepicture',upload.single('image'), updateProfilePicture);
 routes.get('/notification',Notifications)
+routes.route('/requests/:action?').get(getrequests).post(requestActions)
 
 /// 🔹 **Post Routes**
 routes.route('/content').get(RetrievePost).post(upload.single('media'), MakePost);

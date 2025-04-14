@@ -17,7 +17,7 @@ export default function Profile() {
     const userId = useMemo(() => user?.split("-")[1], [user]);
     const [profileData, setProfileData] = useState<any>({});
 
-    const context=useSelector((state:RootState)=>state.context) as any;
+    const context = useSelector((state: RootState) => state.context) as any;
 
     const isOwnProfile = context.userData._id === userId;
     const dispatch = useDispatch();
@@ -25,6 +25,7 @@ export default function Profile() {
 
     const fetchUserData = async (userId: string) => {
         const response = await axiosInstance.get(`/user/${userId}`);
+        console.log("User profile : ", response);
         setProfileData(response);
     }
 
@@ -32,14 +33,44 @@ export default function Profile() {
         if (!profileData._id) return "";
         return `/content?type=user&uid=${profileData._id}`;
     }, [profileData._id]);
-    
 
-    const handleAction = async () => {
-        let action = profileData.isFollowing ? "unfollow" : "follow";
-        await axiosInstance.put(`/profile/${profileData._id}?action=${action}`);
-        setProfileData({ ...profileData, isFollowing: !profileData.isFollowing })
+    const [isActionInProgress, setIsActionInProgress] = useState(false);
 
+const handleAction = async () => {
+
+    try {
+        const { accountVisibility, isFollowing, isRequested, _id } = profileData;
+
+        let action = "";
+        let nextState = {};
+
+        if (accountVisibility === 'public') {
+            action = isFollowing ? "unfollow" : "follow";
+            await axiosInstance.put(`/profile/${_id}?action=${action}&acctype=public`);
+            nextState = { isFollowing: !isFollowing };
+        } else {
+            if (isRequested) {
+                action = "removeRequest";
+                nextState = { isRequested: false };
+            } else if (isFollowing) {
+                action = "unfollow";
+                nextState = { isFollowing: false ,isRequested:false};
+            } else {
+                action = "follow";
+                nextState = { isRequested: true,isFollowing:false};
+            }
+
+            await axiosInstance.put(`/profile/${_id}?action=${action}&acctype=private`);
+        }
+
+        setProfileData(prev => ({ ...prev, ...nextState }));
+
+    } catch (err) {
+        console.error("Follow/unfollow error:", err);
+    } finally {
     }
+};
+
 
     useEffect(() => {
         if (userId) {
@@ -88,7 +119,14 @@ export default function Profile() {
                     condition={!isOwnProfile}
                     component={<div className='button-holder'>
 
-                        <AccentButton onClick={handleAction} text={profileData.isFollowing ? "Unfollow" : "Follow"} />
+                        <AccentButton
+                            onClick={handleAction}
+                        
+                            text={
+                                profileData.isFollowing?"Unfollow":profileData.isRequested?"Requested":"Follow"
+                            }
+                        />
+
                         <BasicButton
                             onClick={() => {
                                 dispatch(updateChatboxMeta({ chatboxId: "" }));
@@ -125,23 +163,33 @@ export default function Profile() {
                     component={
                         <ConditionalRendererWithDefault
                             condition={profileData._id}
-                            component={<GenericLazyLoader  style={{justifyContent:"center"}} url={memoizedUrl} Element={PostComponent} />}
+                            component={<GenericLazyLoader style={{ 
+                                display: "grid", 
+                                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", 
+                                gap: "1rem", 
+                                justifyContent: "center" 
+                              }}  url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent="Loading Posts..." />
                     }
                     defaultComponent={
                         <ConditionalRendererWithDefault
-                            condition={profileData.isFollowing}
-                            component={<GenericLazyLoader style={{justifyContent:"center"}} url={memoizedUrl} Element={PostComponent} />}
-                            defaultComponent={<Holder classname='private-account' >
-
-                                <div style={{ padding: "var(--padding-small)", border: "1px dashed currentColor", borderRadius: "50%", width: "40px", height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }} className='lock-icon'>
-                                    <SmallIcon icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                    </svg>} />
-                                </div>
-                                <h2>Account is Private</h2>
-                                <p className='text-light'>Follow them to see their posts</p>
-                            </Holder>
+                            condition={profileData.accountVisibility === 'public'}
+                            component={<GenericLazyLoader style={{ justifyContent: "center" }} url={memoizedUrl} Element={PostComponent} />}
+                            defaultComponent={
+                                <ConditionalRendererWithDefault
+                                    condition={profileData.isFollowing}
+                                    component={<GenericLazyLoader style={{ justifyContent: "center" }} url={memoizedUrl} Element={PostComponent} />}
+                                    defaultComponent={
+                                        <Holder classname='private-account' >
+                                            <div style={{ padding: "var(--padding-small)", border: "1px dashed currentColor", borderRadius: "50%", width: "40px", height: "40px", display: "flex", justifyContent: "center", alignItems: "center" }} className='lock-icon'>
+                                                <SmallIcon icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                                </svg>} />
+                                            </div>
+                                            <h2>Account is Private</h2>
+                                            <p className='text-light'>Follow them to see their posts</p>
+                                        </Holder>
+                                    } />
                             }
                         />
                     } />

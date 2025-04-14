@@ -1,9 +1,17 @@
-import { useEffect, useState } from "react"
+import { act, useEffect, useState } from "react"
 import axiosInstance from "../../../helpers/axiosModified";
 import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/file";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../helpers/store";
+import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
+import { ConditionalRendererWithoutDefault } from "../../../newComponents/Generics/GenericConditionlRender/file";
+import { AccentButton, BasicButton } from "../../../newComponents/Clickables/buttons/file";
+import { useNavigate } from "react-router-dom";
 export default function Notifications(){
     const [notifications,setNotification]=useState<[any]|null>(null);
-
+    const [requests,setRequests]=useState<[]>([])
+    const context=useSelector((state:RootState)=>state.context);
+    const navigate=useNavigate();
 
     const loadNotification=async()=>{
         const notification=await axiosInstance.get('notification') as any;
@@ -12,8 +20,10 @@ export default function Notifications(){
     }
 
     useEffect(()=>{
-       
         loadNotification();
+    axiosInstance.get('/requests').then((data)=>{
+            setRequests(data.userRequests);
+        }).catch(e=>console.log(e));
     },[]);
 
     
@@ -42,27 +52,25 @@ interface Props{
         const template= typeMatchTemplates[type];
         return template()
       }
-
+      const handleRequest=(action:string,id:string)=>{
+        axiosInstance.post(`/requests/${action}?id=${id}`);
+      }
 
     return (
         <div>
             <h1>Notifications</h1>
-
-            <div className="notificationloader">
-                {notifications &&notifications.length>0?
-                notifications.map((value:any,index)=>{
-                    return(
-                        <GenericHeader key={index}
-                        clickType="text"
-                        imagePath={value.userData.profilePicture}
-                        decorate={false}
-                        showIcon={false}
-                        content={getMessage(value.type)}
-                        headText={value.userData.username}/>
-                    )
-                }):
-                <p>No new notification</p>}
-            </div>
+            <ConditionalRendererWithoutDefault
+            condition={context.userData.accountVisibility=='private' && requests.length>0}
+            component={<Holder>
+                <h2>User Requests</h2>
+                {requests.map((value:any,index)=><GenericHeader onClick={()=>navigate(`/dashboard/profile?user=${value.username}-${value._id}`)} key={index} imagePath={value.profilePicture} clickType="text" headText={value.username} showIcon={false} decorate={false} hintText="wants to follow you">
+                    <AccentButton onClick={()=>handleRequest('accept',value._id)} text="Accept"/>
+                    <BasicButton onClick={()=>handleRequest('reject',value._id)} text="Reject"/>
+                </GenericHeader>)}
+            </Holder>}
+            />
+            
+        
         </div>
     )
 }

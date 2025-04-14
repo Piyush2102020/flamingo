@@ -159,11 +159,13 @@ export default function PostComponent({ item }: { item: any }) {
                 <TextHint text={`${likes} likes`} />
 
                 <Holder direction="horizontal">
-                    <ClickableBoldText
-                        onClick={() => navigate(`/dashboard/profile?user=${item.userData.username}-${item.userData._id}`)}
-                        text={item.userData.username}
-                    />
+                    <p>
+                    <b  onClick={() => navigate(`/dashboard/profile?user=${item.userData.username}-${item.userData._id}`)}
+                        >{item.userData.username}  </b>
                     {item.content}
+                    </p>
+                    
+
                 </Holder>
             </div>
         </div>

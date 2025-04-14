@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema({
     dob:{type:Date,default:Date.now()},
     accountVisibility:{type:String,enum:["public","private"],default:"public"},
     messageAllowed:{type:String,default:"Everyone"},
+    requests:[{type:mongoose.Types.ObjectId,ref:"users",default:[]}],
     followers: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     following: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     postCount: { type: Number, default: 0 },

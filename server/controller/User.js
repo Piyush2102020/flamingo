@@ -52,7 +52,8 @@ exports.userInfo = async (req, res, next) => {
                 $addFields: {
                     followersCount: { $size: "$followers" },
                     followingCount: { $size: "$following" },
-                    isFollowing: { $in: [new mongoose.Types.ObjectId(req.user._id), "$followers"] }
+                    isFollowing: { $in: [new mongoose.Types.ObjectId(req.user._id), "$followers"] },
+                    isRequested:{$in:[new mongoose.Types.ObjectId(req.user._id),"$requests"]}
                 }
             }, {
                 $project: {
@@ -93,6 +94,39 @@ exports.updateProfile = async (req, res, next) => {
     }
 };
 
+exports.getrequests=async(req,res,next)=>{
+    const requests=await UserModel.aggregate([
+        {$match:{_id: new mongoose.Types.ObjectId(req.user._id)}},
+        {$project:{requests:1}},
+        {$lookup:{
+            from :"users",
+            localField:"requests",
+            foreignField:"_id",
+            as:"userRequests",
+            pipeline:[{$project:{
+                name:1,
+                username:1,
+                _id:1,
+                profilePicture:1
+            }}]
+        }},{$project:{requests:0}}
+    ])
+
+
+    response(res,"acknowledged",requests[0]);
+}
+
+exports.requestActions=async(req,res,next)=>{
+    const {action}=req.params;
+    const {id}=req.query;
+    if(action==='accept'){
+        await UserModel.findByIdAndUpdate(req.user._id,{$push:{followers:id},$pull:{requests:id}});
+        await UserModel.findByIdAndUpdate(id,{$push:{following:req.user._id}})
+    }else{
+        await UserModel.findByIdAndUpdate(req.user._id,{$pull:{requests:id}});
+    }
+    response(res,"acknowledged")
+}
 /**
  * Updates user's profile picture.
  * 
@@ -130,12 +164,20 @@ exports.updateProfilePicture=async (req,res,next)=>{
  */
 exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
-    const {action}=req.query;
+    const {action,acctype}=req.query;
     if(action==='follow'){
-        const notification={type:"follow",contentId:null,userId:req.user._id};
-        await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
+        const notification={type:"request",contentId:null,userId:req.user._id};
+        if(acctype=='public'){
+            await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
         await UserModel.findByIdAndUpdate(req.user._id,{$push:{following:id}});
         response(res,"acknowledged");
+        }else{
+            await UserModel.findByIdAndUpdate(id,{$push:{requests:req.user._id,notifications:notification}});
+        response(res,"acknowledged");
+        }
+        
+    }else if(action=='removeRequest'){
+        await UserModel.findByIdAndUpdate(id,{$pull:{requests:req.user._id}});
     }else{
         await UserModel.findByIdAndUpdate(id,{$pull:{followers:req.user._id}});
         await UserModel.findByIdAndUpdate(req.user._id,{$pull:{following:id}});

@@ -1,7 +1,7 @@
 # Ignore node_modules in both server and app directories
 server/node_modules/
 app/node_modules/
-
+/machinelearning
 # Optional: Ignore other common files
 *.log
 *.env
