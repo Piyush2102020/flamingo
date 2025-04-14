@@ -2,6 +2,7 @@ const ApiError = require("../helpers/ApiError");
 const { response } = require("../helpers/functions");
 const STATUS_CODES = require("../helpers/status_code");
 const PostModel = require("../models/PostModel");
+const { Notify } = require("./Notifications");
 
 
 /**
@@ -16,7 +17,8 @@ exports.Interact=async(req,res,next)=>{
         }
         else{
             if(type=='like'){
-                await PostModel.findByIdAndUpdate(id,{$push:{likes:req.user._id}});
+                const postData=await PostModel.findByIdAndUpdate(id,{$push:{likes:req.user._id}},{new:true});
+                Notify(postData.userId,"post",id,req.user._id)
                 
             }else if(type=='dislike'){
                 await PostModel.findByIdAndUpdate(id,{$pull:{likes:req.user._id}});

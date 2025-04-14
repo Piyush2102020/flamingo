@@ -33,7 +33,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         if(!context.userData._id)return;
-        startSocket(context.userData._id)
+        startSocket(context.userData._id,dispatch)
     }, [context.userData._id]);
 
     return (

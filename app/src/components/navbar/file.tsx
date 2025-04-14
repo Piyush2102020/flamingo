@@ -104,6 +104,8 @@ export default function Navbar({style}:{style:CSSProperties}) {
                 </svg>
                 {!context.isMobile&& "Profile"}
             </div>
+
+            <audio id="background-audio" src="/birds-chirp-153780.mp3"/>
         </div>
     );
 }

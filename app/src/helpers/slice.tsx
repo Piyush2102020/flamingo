@@ -19,9 +19,6 @@ const slice = createSlice(
             newMessage: false,
             newNotification: false,
             isMobile: false,
-
-
-
             chatbox: {
                 receiverId: "",
                 receiverUsername: "",
@@ -35,7 +32,11 @@ const slice = createSlice(
             toggleCommentBox: (state) => { state.comment.isVisible = !state.comment.isVisible },
             setPostId: (state, action: PayloadAction<"">) => { state.comment.postId = action.payload },
             setParentId: (state, action: PayloadAction<"">) => { state.comment.parentId = action.payload },
-            toggleNotification: (state) => { state.newNotification = !state.newNotification },
+            toggleNotification: (state) => { 
+                const audio=document.getElementById('background-audio')as HTMLAudioElement;
+ 
+                
+                state.newNotification = !state.newNotification },
             toggleMessage: (state) => { state.newMessage = !state.newMessage },
             setIsMobile: (state, action: PayloadAction<boolean>) => { state.isMobile = action.payload },
             changeTheme:(state)=>{state.theme=!state.theme},

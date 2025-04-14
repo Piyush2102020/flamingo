@@ -36,18 +36,6 @@ const postSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-postSchema.virtual('likeCount').get(function () {
-    return this.likes.length;
-});
 
-
-postSchema.set('toJSON', {
-    transform: (doc, ret, options) => {
-        if (!options.includeLikes) {
-            delete ret.likes;
-        }
-        return ret;
-    }
-});
 
 module.exports = mongoose.model("Post", postSchema);

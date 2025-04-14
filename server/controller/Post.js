@@ -7,6 +7,7 @@ const STATUS_CODES = require('../helpers/status_code');
 const { default: mongoose } = require('mongoose');
 const CommentModel = require('../models/CommentModel');
 const UserModel = require('../models/UserModel');
+const { Notify } = require('./Notifications');
 
 
 
@@ -124,6 +125,8 @@ exports.AddComment = async (req, res, next) => {
         const { postId, parentId } = req.params;
         const newComment = new CommentModel({ postId: postId, parentId: parentId, userId: req.user._id, content: req.body.content });
         await newComment.save()
+        const userId=await PostModel.findById(postId,{userId:1})
+        Notify(userId.userId,'post',postId,req.user._id,'post')
         response(res, "acknowledged")
 
     } catch (e) {
