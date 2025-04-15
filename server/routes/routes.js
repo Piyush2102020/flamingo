@@ -79,7 +79,7 @@ routes.get('/notification',Notifications)
 routes.route('/requests/:action?').get(getrequests).post(requestActions)
 
 /// 🔹 **Post Routes**
-routes.route('/content').get(RetrievePost).post(upload.single('media'), MakePost);
+routes.route('/content/:id?').get(RetrievePost).post(upload.single('media'), MakePost);
 routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddComment);
 routes.post('/content/:id', Interact);
 

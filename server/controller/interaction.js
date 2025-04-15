@@ -18,8 +18,7 @@ exports.Interact=async(req,res,next)=>{
         else{
             if(type=='like'){
                 const postData=await PostModel.findByIdAndUpdate(id,{$push:{likes:req.user._id}},{new:true});
-                Notify(postData.userId,"post",id,req.user._id)
-                
+                Notify(postData.userId,"liked",id,req.user._id)
             }else if(type=='dislike'){
                 await PostModel.findByIdAndUpdate(id,{$pull:{likes:req.user._id}});
             }

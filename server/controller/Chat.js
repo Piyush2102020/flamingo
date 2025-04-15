@@ -12,8 +12,6 @@ const { Message, ChatModel }=require('../models/ChatModels');
  */
 exports.getUsersInInbox = async (req, res, next) => {
   try {
-
-
     const chats = await UserModel.aggregate([
       {
         $match: {

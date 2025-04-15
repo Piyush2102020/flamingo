@@ -14,6 +14,8 @@ import Forgetpassword from "../pages/passwordReset/file";
 import Notifications from "../pages/children/notification/file";
 import RealtimeChatBox from "../components/realtimeChatbox/file";
 import Settings from "../pages/children/account_settings/file";
+import PostComponent from "../components/postComponent/file";
+import PostPreview from "../components/postComponent/postPreview";
 
 export default function Routes() {
     const routes = useRoutes([
@@ -41,6 +43,7 @@ export default function Routes() {
                 { path: "chatbox", element: <RealtimeChatBox/> },
                 { path: "notification" ,element:<Notifications/>},
                 {path:"settings",element:<Settings/>},
+                {path:"post/:id",element:<PostPreview/>}
             ]
         },
         { path: '/*', element: <Pnf text="Uh-oh! Even our flamingo can’t find this one" /> }

@@ -62,17 +62,22 @@ exports.RetrievePost = async (req, res, next) => {
     try {
         let limit = 2;
         const { page = 1, uid, type } = req.query;
-        console.log(req.query);
-
+        const {id}=req.params;
+        console.log("Post ID : ",id);
+        
         let filter = {};
         if (type === 'feed' && !uid) {
             filter = {};
         } else if (type === 'user' && uid) {
             filter = { userId: new mongoose.Types.ObjectId(uid) };
-        } else {
-            throw new ApiError(405, "Method Not Allowed");
+        } else if(id) {
+            if(mongoose.isValidObjectId(id)){
+                filter={ _id:new mongoose.Types.ObjectId(id)}
+            }
+            
         }
-
+        console.log("Filter is  : ",filter);
+        
 
         const posts = await PostModel.aggregate([
             { $match: filter },
@@ -126,7 +131,7 @@ exports.AddComment = async (req, res, next) => {
         const newComment = new CommentModel({ postId: postId, parentId: parentId, userId: req.user._id, content: req.body.content });
         await newComment.save()
         const userId=await PostModel.findById(postId,{userId:1})
-        Notify(userId.userId,'post',postId,req.user._id,'post')
+        Notify(userId.userId,'comment',postId,req.user._id,'post')
         response(res, "acknowledged")
 
     } catch (e) {

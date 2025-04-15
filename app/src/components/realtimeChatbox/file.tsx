@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../helpers/store"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getSocket } from "../../helpers/socketServer";
 import axiosInstance from "../../helpers/axiosModified";
 import { updateChatboxMeta } from "../../helpers/slice";
@@ -15,13 +15,22 @@ export default function RealtimeChatBox() {
   const [inputMessage,setInputMessage]=useState("");
   const socket=getSocket();
   const dispatch=useDispatch();
-
+  const messageDiv=useRef<HTMLDivElement | null>(null)
   const loadMessage=async ()=>{
     const oldMessages=await axiosInstance.get(`/getmessages/${context.chatbox.chatboxId}`);
     setMessages(prev=>[...prev,...oldMessages]);
   }
 
-  
+  const scrollToBottom=()=>{
+    if(messageDiv.current){
+      messageDiv.current.scrollIntoView({behavior:"smooth"});
+    }
+  }
+
+
+  useEffect(()=>{
+    scrollToBottom();
+  },[messages])
   const sendMessage=()=>{
     socket.emit("message",{
       senderId:context.userData._id,
@@ -56,13 +65,14 @@ export default function RealtimeChatBox() {
 
       <h2>{context.chatbox.receiverUsername}</h2>
 
-      <div className="messages">
+      <div  id="message-container" className="messages">
         {messages?messages.map((value:any,index)=>{
           
           value.isSender=value.senderId===context.userData._id;
           value.receiverProfilePicture=value.isSender?context.userData.profilePicture:context.chatbox.receiverProfilePicture;
 
           return value.isSender?<SenderMessageLayout key={index} item={value}/>:<ReceiverMessageLayout key={index} item={value}/>}):"Start a conversation now"}
+          <div ref={messageDiv}></div>
       </div>
 
         <Holder classname="input-field-container" direction="horizontal">

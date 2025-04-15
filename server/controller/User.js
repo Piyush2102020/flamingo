@@ -5,7 +5,7 @@ const STATUS_CODES = require("../helpers/status_code");
 const cloudinary=require("../helpers/cloudinary");
 const { response, generateToken } = require("../helpers/functions");
 const streamifier=require('streamifier');
-const {Notify}=require('../helpers/sockets');
+const {Notify}=require('../controller/Notifications');
 
 
 /**
@@ -166,13 +166,13 @@ exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action,acctype}=req.query;
     if(action==='follow'){
-        const notification={type:"request",contentId:null,userId:req.user._id};
         if(acctype=='public'){
-            await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id,notifications:notification}});
+            await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id}});
         await UserModel.findByIdAndUpdate(req.user._id,{$push:{following:id}});
+        Notify(id,"follow",null,req.user._id)
         response(res,"acknowledged");
         }else{
-            await UserModel.findByIdAndUpdate(id,{$push:{requests:req.user._id,notifications:notification}});
+            await UserModel.findByIdAndUpdate(id,{$push:{requests:req.user._id}});
         response(res,"acknowledged");
         }
         
