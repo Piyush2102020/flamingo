@@ -17,6 +17,7 @@ type HeaderProps = {
     decorate?:boolean;
     children?: React.ReactNode;
     clickType: "header" | "text";
+    rightText:string;
     component?:React.ReactNode;
     onClick?: () => void;
     content?:string;
@@ -24,7 +25,7 @@ type HeaderProps = {
 
 
 
-export const GenericHeader: React.FC<HeaderProps> = ({ component,style,decorate=true,content, classname, imagePath, headText
+export const GenericHeader: React.FC<HeaderProps> = ({ rightText=undefined,component,style,decorate=true,content, classname, imagePath, headText
     , hintText,
     onClick,
     timestamp, showIcon = true, children, clickType = 'header'
@@ -39,6 +40,7 @@ export const GenericHeader: React.FC<HeaderProps> = ({ component,style,decorate=
                         condition={decorate}
                         component={"•"} />
                     <TextHint text={timestamp?timeAgo(timestamp):""} />
+                    <TextHint text={rightText?rightText:""} />
                 </Holder>
 
                 <TextHint text={hintText||""} />

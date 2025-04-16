@@ -291,6 +291,8 @@ exports.Notifications = async (req, res, next) => {
           contentId: "$notifications.contentId",
           contentType: "$notifications.contentType",
           userData: "$userData",
+          text:"$notifications.text",
+          media:"$notifications.media"
         },
       },
       {

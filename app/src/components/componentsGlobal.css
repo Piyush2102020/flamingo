@@ -5,10 +5,14 @@
     font-size: 1.1;
     width: 400px;
     gap: var(--gap-medium);
-    border-bottom: 2px solid var(--color-text-light);
+    border-bottom: 2px solid var(--color-shadow);
     background-color: var(--color-element);
 }
 
+.post-image{
+    max-height: 500px;
+    object-fit: contain;
+}
 @media (max-width:400px) {
     .post-component{
         width: 100%;
@@ -107,12 +111,7 @@
 }
 
 
-@media (max-width:400px) {
-    .comments-container{
-        width: 100%;
-    }
-    
-}
+
 
 .comment-input .btn{
     width: 20%;
@@ -123,11 +122,11 @@
 /* Header */
 
 .header{
-    padding: var(--padding-small);
+    padding: var(--padding-medium);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 10px 10px var(--color-element);
+    box-shadow: 0px 10px 10px var(--color-shadow);
 }
 
 .header .appname{
@@ -146,6 +145,7 @@
     flex-direction: column;
      padding: 2px var(--padding-large);
     gap: var(--gap-small);
+    z-index: 10;
 }
 
 .nav-item {
@@ -192,6 +192,7 @@
 
 
 
+
 /* Pnf */
 
 .pnf{
@@ -206,4 +207,17 @@
     width: 500px;
     height: 500px;
     object-fit: fill;
+}
+
+
+@media (max-width:480px) {
+    .comments-container{
+        width: 100%;
+    }
+    .comment-box-container{
+        position: fixed;
+        bottom: 0;
+        z-index: 1000 
+    }
+
 }

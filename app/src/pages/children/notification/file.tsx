@@ -4,7 +4,7 @@ import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/fil
 import { useSelector } from "react-redux";
 import { RootState } from "../../../helpers/store";
 import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
-import { ConditionalRendererWithoutDefault } from "../../../newComponents/Generics/GenericConditionlRender/file";
+import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from "../../../newComponents/Generics/GenericConditionlRender/file";
 import { AccentButton, BasicButton } from "../../../newComponents/Clickables/buttons/file";
 import { useNavigate } from "react-router-dom";
 import Header from "../../../components/header/file";
@@ -69,17 +69,25 @@ export default function Notifications() {
             <Holder style={{ flexDirection: "column-reverse" }}>
                 {
                     notifications?.map((value: any, index) =>
-                        <Holder onClick={value.contentId?()=>navigate(`/dashboard/post/${value.contentId}`):undefined}>
+                        <Holder style={{gap:"var(--gap-medium)",padding:"var(--padding-small)"}} onClick={value.contentId?()=>navigate(`/dashboard/post/${value.contentId}`):undefined}>
                             <GenericHeader
-                                style={{ margin: "var(--margin-medium)", justifyContent: "center", alignItems: "center" }}
+                                style={{padding:"var(--padding-small)",borderBottom:"1px solid var(--color-shadow)" }}
                                 key={index}
                                 headText={value.userData.username}
                                 clickType="text"
-                                hintText={getMessage(value.type)}
+                                rightText={getMessage(value.type)}
+                                content={value.text}
                                 onClick={() => navigate(`/dashboard/profile?user=${value.userData.username}-${value.userData._id}`)}
                                 decorate={false}
                                 imagePath={value.userData.profilePicture}
-                            />
+                                showIcon={false}
+                            >
+
+               
+                                {value.media&& <img style={{width:"var(--icon-medium)",height:"var(--icon-medium)"}} src={!value.media.includes('video')?value.media:'/icons/app_icon.png'}/>}
+                                
+                                
+                            </GenericHeader>
                         </Holder>
                     )
                 }

@@ -1,13 +1,13 @@
 /* Root Theme Variables */
 :root {
     --color-background: white;
-    --color-element: rgb(237, 237, 237);
+    --color-element: white;
     --color-text: black;
     --color-text-light: color-mix(in srgb, var(--color-text) 50%, transparent);
     --shadow: 0px 10px 10px rgba(0, 0, 0, 0.262);
     --color-text-on-accent: white;
     --color-comment-box:rgb(203, 203, 203);
-
+    --color-shadow:rgb(219, 219, 219);
     --flamingo: #bb4160;
     --flamingo-dark: #8B2E3F;
     --flamingo-darker: #67202B;
@@ -40,12 +40,14 @@
     --icon-small: 24px;
     --icon-medium: 28px;
     --icon-large: 32px;
+    --icon-extra-large:2.5rem;
 }
 
 /* Dark Mode Variables */
 :root[data-theme="dark"] {
     --color-background: black;
     --color-element: transparent;
+    --color-shadow:rgb(51, 51, 51);
     --color-text: white;
     --color-text-light: color-mix(in srgb, var(--color-text) 80%, transparent);
     --color-accent: rgb(103, 5, 48);

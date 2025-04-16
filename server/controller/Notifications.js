@@ -4,7 +4,7 @@ const UserModel = require('../models/UserModel');
 
 
 
-exports.Notify=async(receiverId,type,contentId,userId,contentType)=>{
+exports.Notify=async(receiverId,type,contentId,userId,contentType,media=null,text=null)=>{
     console.log(receiverId,userId);
     
     const receiverSocket=getUserSocketId(receiverId.toString());
@@ -13,7 +13,9 @@ exports.Notify=async(receiverId,type,contentId,userId,contentType)=>{
         if(receiverSocket && io ){
             io.to(receiverSocket).emit('notification');
         }
-        const notification={type:type,contentId:contentId,userId:userId,contentType:contentType}
+        const notification={type:type,contentId:contentId,userId:userId,contentType:contentType,media:media,text:text}
+        console.log(notification);
+        
         await UserModel.findByIdAndUpdate(receiverId,{$push:{notifications:notification}})
     
    

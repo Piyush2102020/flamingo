@@ -8,10 +8,10 @@ type TextProps={
 
 
 export const ClickablePara:React.FC<TextProps>=({text ,onClick})=>{
-    return (<p onClick={onClick}>{text}</p>)
+    return (<p  onClick={onClick}>{text}</p>)
 }
 
 
 export const ClickableBoldText:React.FC<TextProps>=({text ,onClick})=>{
-    return (<b onClick={onClick}>{text}</b>)
+    return (<b style={{zIndex:100}} onClick={onClick}>{text}</b>)
 }

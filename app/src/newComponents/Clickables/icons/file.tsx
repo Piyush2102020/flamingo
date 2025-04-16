@@ -6,17 +6,17 @@ type IconsProps = {
   style?:CSSProperties;
 };
 
-export const SmallIcon: React.FC<IconsProps> = ({ icon ,onClick}) => {
+export const SmallIcon: React.FC<IconsProps> = ({ icon ,onClick,arialabel}) => {
   return (
-    <div onClick={onClick} className="small-icon">
+    <div  onClick={onClick} className="small-icon">
       {icon}
     </div>
   );
 };
 
-export const MediumIcon: React.FC<IconsProps> = ({ icon,onClick }) => {
+export const MediumIcon: React.FC<IconsProps> = ({icon,onClick }) => {
     return (
-      <div onClick={onClick} className="medium-icon">
+      <div  onClick={onClick} className="medium-icon">
         {icon}
       </div>
     );
@@ -31,10 +31,10 @@ export const SmallImage: React.FC<IconsProps> = ({onClick,style ,imgPath}) => {
     );
   };
   
-  export const MediumImage: React.FC<IconsProps> = ({ imgPath,onClick }) => {
+  export const MediumImage: React.FC<IconsProps> = ({ style,imgPath,onClick }) => {
     return (
-      <div onClick={onClick} >
-        <img src={imgPath?imgPath:"/icons/profile-default.svg"} className="dp-large" />
+      <div  onClick={onClick} >
+        <img style={style} src={imgPath?imgPath:"/icons/profile-default.svg"} className="dp-large" />
       </div>
     );
   };

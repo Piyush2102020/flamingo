@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { Holder } from "../../newComponents/Generics/GenericHolders/file";
 import { SmallIcon } from "../../newComponents/Clickables/icons/file";
 import { TextHint } from "../../newComponents/Generics/GenericText/file";
-import { ClickableBoldText } from "../../newComponents/Clickables/text/file";
 import { ConditionalRendererWithDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
 
 export default function PostComponent({ item }: { item: any }) {
@@ -19,7 +18,9 @@ export default function PostComponent({ item }: { item: any }) {
     const navigate = useNavigate();
 
     const Interact = async (type: string) => {
-        await axiosInstance.post(`content/${item._id}?type=${type}`);
+        console.log("Making request : ",`content/${item._id}/interact?type=${type}`);
+        
+        await axiosInstance.post(`content/${item._id}/interact?type=${type}`);
     };
 
     const handleClick = () => {
@@ -72,9 +73,9 @@ export default function PostComponent({ item }: { item: any }) {
             <ConditionalRendererWithDefault
                 condition={item.mediaType === 'video'}
                 component={
-                    <Holder style={{position:"relative"}}>
+                    <Holder style={{ position: "relative" }}>
                         <video
-                        style={{width:"100%",background:"aqua"}}
+                            style={{ width: "100%", background: "aqua" }}
                             ref={videoRef}
                             muted={isMuted}
                             src={item.media}
@@ -90,9 +91,9 @@ export default function PostComponent({ item }: { item: any }) {
                                 borderRadius: "50%",
                                 padding: "5px 10px",
                                 cursor: "pointer",
-                                right:"0px",
-                                bottom:"4px"
-                                
+                                right: "0px",
+                                bottom: "4px"
+
                             }}
                         >
                             {isMuted ? "Unmute" : "Mute"}
@@ -160,11 +161,11 @@ export default function PostComponent({ item }: { item: any }) {
 
                 <Holder direction="horizontal">
                     <p>
-                    <b  onClick={() => navigate(`/dashboard/profile?user=${item.userData.username}-${item.userData._id}`)}
+                        <b onClick={() => navigate(`/dashboard/profile?user=${item.userData.username}-${item.userData._id}`)}
                         >{item.userData.username}  </b>
-                    {item.content}
+                        {item.content}
                     </p>
-                    
+
 
                 </Holder>
             </div>

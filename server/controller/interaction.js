@@ -8,8 +8,11 @@ const { Notify } = require("./Notifications");
 /**
  * Takes in the post id and type is it like dislike etc and do the following actions
  */
-exports.Interact=async(req,res,next)=>{
+exports.Interaction=async(req,res,next)=>{
+    console.log("liked called");
     try{
+       
+        
         const {id}=req.params;
         const {type}=req.query;
         if(!id || !type){
@@ -18,7 +21,7 @@ exports.Interact=async(req,res,next)=>{
         else{
             if(type=='like'){
                 const postData=await PostModel.findByIdAndUpdate(id,{$push:{likes:req.user._id}},{new:true});
-                Notify(postData.userId,"liked",id,req.user._id)
+                Notify(postData.userId,"liked",id,req.user._id,"post",postData.media,text="");
             }else if(type=='dislike'){
                 await PostModel.findByIdAndUpdate(id,{$pull:{likes:req.user._id}});
             }

@@ -21,31 +21,34 @@ const { Notify } = require('./Notifications');
 exports.MakePost = async (req, res, next) => {
     try {
         let mediaUrl = '';
-        const resourceType = req.file.mimetype.startsWith('video') ? "video" : "image";
-        const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                folder: "/flamingo_posts",
-                resource_type: resourceType
-            },
-
-            async (error, result) => {
-                if (error) {
-                    return next(error);
+        if(req.file){
+            const resourceType = req.file.mimetype.startsWith('video') ? "video" : "image";
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "/flamingo_posts",
+                    resource_type: resourceType
+                },
+    
+                async (error, result) => {
+                    if (error) {
+                        return next(error);
+                    }
+                    mediaUrl = result.secure_url;
+                    const newPost = new PostModel({
+                        userId: req.user._id,
+                        media: mediaUrl,
+                        mediaType: resourceType,
+                        ...req.body
+                    });
+                    await newPost.save();
+                    await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id), { $inc: { postCount: 1 } });
+                    response(res, "Post Created");
                 }
-                mediaUrl = result.secure_url;
-                const newPost = new PostModel({
-                    userId: req.user._id,
-                    media: mediaUrl,
-                    mediaType: resourceType,
-                    ...req.body
-                });
-                await newPost.save();
-                await UserModel.findByIdAndUpdate(new mongoose.Types.ObjectId(req.user._id), { $inc: { postCount: 1 } });
-                response(res, "Post Created");
-            }
-        );
-        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-    } catch (e) {
+            );
+            streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+        
+        }
+        } catch (e) {
         next(e);
     }
 };
@@ -130,8 +133,8 @@ exports.AddComment = async (req, res, next) => {
         const { postId, parentId } = req.params;
         const newComment = new CommentModel({ postId: postId, parentId: parentId, userId: req.user._id, content: req.body.content });
         await newComment.save()
-        const userId=await PostModel.findById(postId,{userId:1})
-        Notify(userId.userId,'comment',postId,req.user._id,'post')
+        const userId=await PostModel.findById(postId,{userId:1,media:1})
+        Notify(userId.userId,'comment',postId,req.user._id,'post',userId.media,req.body.content)
         response(res, "acknowledged")
 
     } catch (e) {

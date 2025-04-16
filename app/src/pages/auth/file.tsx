@@ -63,13 +63,8 @@ export default function Auth() {
 
     const handleSuccess = (response: any) => {
         const token = response.credential;
-       
         const userData = jwtDecode(token) as any;
-        setData(formData => {
-            formData.name = userData.name;
-            formData.email = userData.email;
-            return formData
-        })
+        setData(formData => ({...formData,email:userData.email,name:userData.name}))
 
     }
     return (
@@ -85,7 +80,7 @@ export default function Auth() {
                 <BasicInputField  name="password" onChange={handleChange} placeholder="Password" value={formData.password} />
 
                 <ConditionalRendererWithoutDefault condition={navigator.onLine} component={<GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
-                    <GoogleLogin text={isLogin ? "continue_with" : "signup_with"} theme="filled_blue" onSuccess={handleSuccess} onError={() => { toast.error("Oauth Error") }}></GoogleLogin>
+                    <GoogleLogin text={isLogin ? "continue_with" : "signup_with"} theme="outline" onSuccess={handleSuccess} onError={() => { toast.error("Oauth Error") }}></GoogleLogin>
                 </GoogleOAuthProvider>} />
 
                 <AccentButton onClick={handleSubmit} text={isLogin ? "Login" : "Create Account"} />

@@ -36,7 +36,9 @@ const NotificationSchema=new mongoose.Schema(
         type:{type:String,required:true},
         contentId:{type:String},
         userId:{type:mongoose.Types.ObjectId,required:true,index:true},
-        contentType:{type:"String",default:"post"}
+        contentType:{type:"String",default:"post"},
+        media:{type:"String"},
+        text:{type:String,default:null}
     }
 )
 
