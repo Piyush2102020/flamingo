@@ -16,7 +16,7 @@ export default function Responsive() {
                 height: window.innerHeight,
             }));
 
-            dispatch(setIsMobile(window.innerWidth <= 400));
+            dispatch(setIsMobile(window.innerWidth <= 480));
         };
 
         window.addEventListener("resize", handleResize);

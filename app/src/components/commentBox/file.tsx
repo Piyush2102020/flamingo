@@ -34,13 +34,13 @@ export default function CommentBox() {
   }
 
   return (
-    <div className="comment-box-container">
+    <div className="comment-box-page">
       <div onClick={() => disptach(toggleCommentBox())} className="overlay"></div>
 
-      <div className='comment-box'>
+      <div className='comment-box-parent'>
 
         <h1>Comments</h1>
-        <div className='comments-container'>
+        <div className='all-comments'>
           {commentBoxState.comments.length > 0 && commentBoxState.comments.map((value: any, index) => <CommentLayout key={index} isReply={false} onClick={() => {
             disptach(setCommentBoxHint(`Replying to @${value.userData.username}`));
             disptach(changeCommentInput(`@${value.userData.username}`));
@@ -53,7 +53,7 @@ export default function CommentBox() {
             condition={!!commentBoxState.hint.trim()}
             component={<TextHint text={commentBoxState.hint} />}
           />
-          <Holder direction='horizontal' classname='comment-input'>
+          <Holder classname='comment-box-input' direction='horizontal'>
             <BasicInputField onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
             <BasicButton onClick={addComment} text='Add Comment' />
           </Holder>

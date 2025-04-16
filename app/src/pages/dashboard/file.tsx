@@ -95,13 +95,14 @@ export default function Dashboard() {
                 >
                     <Outlet />
                 </div>
-            </div>
-
-            {/* Comment Box */}
-            <ConditionalRendererWithoutDefault
+                <ConditionalRendererWithoutDefault
                 condition={context.comment.isVisible}
                 component={<CommentBox />}
             />
+            </div>
+
+            {/* Comment Box */}
+           
         </div>
     );
 }

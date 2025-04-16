@@ -13,5 +13,5 @@ export const ClickablePara:React.FC<TextProps>=({text ,onClick})=>{
 
 
 export const ClickableBoldText:React.FC<TextProps>=({text ,onClick})=>{
-    return (<b style={{zIndex:100}} onClick={onClick}>{text}</b>)
+    return (<b onClick={onClick}>{text}</b>)
 }
