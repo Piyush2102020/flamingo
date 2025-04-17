@@ -86,7 +86,7 @@ export default function AddPost() {
 
     return (
 
-        <Holder classname='addpost'>
+        <Holder style={{width:"100%"}} classname='addpost'>
 
             <ConditionalRendererWithDefault
                 condition={!selectedFile}

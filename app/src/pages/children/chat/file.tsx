@@ -30,7 +30,7 @@ export default function Chat() {
 
   return (
     <div className="chatbox">
-      <h1>Direct Messages</h1>
+      <h1 style={{fontSize:"1.5rem"}}>Direct Messages</h1>
 
       <Holder
         direction="horizontal"

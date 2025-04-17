@@ -51,6 +51,7 @@ export default function Search() {
                 key={index}
                 clickType='header'
                 headText={value.username}
+                hintText={value.name}
                 imagePath={value.profilePicture}
                 showIcon={false}
                 decorate={false}

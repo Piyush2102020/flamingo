@@ -47,7 +47,7 @@
 :root[data-theme="dark"] {
     --color-background: black;
     --color-element: transparent;
-    --color-shadow:rgb(51, 51, 51);
+    --color-shadow:rgb(25, 25, 25);
     --color-text: white;
     --color-text-light: color-mix(in srgb, var(--color-text) 80%, transparent);
     --color-accent: rgb(103, 5, 48);

@@ -13,21 +13,22 @@
 
 
 .sender{
-    width: 60%;
     align-self: flex-end;
+    width: 70%;
 }
 
 .receiver{
-    width: 60%;
     color: var(--color-text-on-accent);
 }
 
 .background-sender{
+    margin-left: 30%;
     border: 1px ridge var(--flamingo);
 }
 
 
 .background-receiver{
+    margin-right: 30%;
     background-color: var(--flamingo);
     color: var(--color-text-on-accent);
 }

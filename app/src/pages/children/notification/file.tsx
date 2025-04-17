@@ -55,7 +55,7 @@ export default function Notifications() {
 
     return (
         <div>
-            <h1>Notifications</h1>
+            <h1 style={{fontSize:"1.5rem",padding:"var(--padding-medium)"}}>Notifications</h1>
             <ConditionalRendererWithoutDefault
                 condition={context.userData.accountVisibility == 'private' && requests.length > 0}
                 component={<Holder>

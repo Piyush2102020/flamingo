@@ -50,9 +50,9 @@ export default function CommentLayout({ item, onClick, isReply = false }: { item
             />
 
           </Holder>
-          <Holder>
+          <Holder style={{transform:"scale(0.85)"}}>
 
-            {replies.length > 0 && replies.map((value: any, index) => <CommentLayout key={index} item={value} onClick={() => {
+            {replies.length > 0 && replies.map((value: any, index) => <CommentLayout  key={index} item={value} onClick={() => {
               dispatch(setCommentBoxHint(`Replying to @${value.userData.username}`));
               dispatch(changeCommentInput(`@${value.userData.username}`));
               dispatch(setParentId(value.parentId));

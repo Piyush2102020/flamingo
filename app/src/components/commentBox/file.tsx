@@ -51,13 +51,13 @@ export default function CommentBox() {
 
       <div className='comment-box-parent'>
 
-        <h1>Comments</h1>
+        <h1 style={{fontSize:"1.5rem"}}>Comments</h1>
         <div className='all-comments'>
-          {commentBoxState.comments.length > 0 && commentBoxState.comments.map((value: any, index) => <CommentLayout key={index} isReply={false} onClick={() => {
+          {commentBoxState.comments.length > 0 ? commentBoxState.comments.map((value: any, index) => <CommentLayout key={index} isReply={false} onClick={() => {
             disptach(setCommentBoxHint(`Replying to @${value.userData.username}`));
             disptach(changeCommentInput(`@${value.userData.username}`));
             disptach(changeParentId(value.parentId ? value.parentId : value._id));
-          }} item={value} />)}
+          }} item={value} />):<h4 >No Comments yet</h4>}
         </div>
 
         <div style={{ width: '95%',justifyContent:"center",alignItems:"center" }}>

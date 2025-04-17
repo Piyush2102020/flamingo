@@ -208,7 +208,7 @@ align-self: center;
 .all-comments{
     overflow-y: scroll;
     flex-grow: 1;
-    width: 90%;
+    width: 100%;
 }
 
 .comment-box-input{
@@ -259,4 +259,21 @@ align-self: center;
     to {
         transform: rotate(360deg);
     }
+}
+
+
+.tabs{
+    width: 100%;
+    justify-content: space-evenly;
+    padding: var(--padding-medium);
+}
+
+.tab-item{
+    width: 40%;
+    padding: var(--padding-medium);
+    text-align: center;
+}
+.selected{
+    
+    border-bottom: 2px solid var(--flamingo);
 }

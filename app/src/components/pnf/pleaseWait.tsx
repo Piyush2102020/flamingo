@@ -7,7 +7,7 @@ export default function PleaseWait() {
         <div className='loader-page'>
             <div className="loader-wrapper">
                 <div className="circular-loader"></div>
-                <p className="loader-text">Please wait...</p>
+                <p style={{color:"black"}} className="loader-text">Please wait...</p>
             </div>
         </div>
 
@@ -33,7 +33,7 @@ export const ShowOptions = ({ isUser, postId, cancelClick }: { isUser: boolean, 
             <div className="loader-wrapper">
                 <Holder style={{ gap: "var(--gap-medium)", alignItems: "center" }}>
                     {isUser && <>  <p style={{ color: "red", textAlign: "center" }} onClick={deletePost} className="loader-text">Delete</p>          <div style={{ width: "100%", backgroundColor: "var(--color-shadow)", height: "1px" }}></div></>}
-                    <p onClick={report} style={{ textAlign: "center" }} className="loader-text">Report</p>
+                    <p onClick={report} style={{color:"black", textAlign: "center" }} className="loader-text">Report</p>
                     <div style={{ width: "100%", backgroundColor: "var(--color-shadow)", height: "1px" }}></div>
                     <p  onClick={() => cancelClick()} style={{ color: "black" }} className="loader-text">Cancel</p>
                 </Holder>

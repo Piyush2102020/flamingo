@@ -6,8 +6,10 @@ import axiosInstance from "../../helpers/axiosModified";
 import { updateChatboxMeta } from "../../helpers/slice";
 import { ReceiverMessageLayout, SenderMessageLayout } from "../../newComponents/Clickables/messages/file";
 import { BasicInputField } from "../../newComponents/Clickables/fields/file";
-import { BasicButton } from "../../newComponents/Clickables/buttons/file";
+import { AccentButton, BasicButton } from "../../newComponents/Clickables/buttons/file";
 import { Holder } from "../../newComponents/Generics/GenericHolders/file";
+import { GenericHeader } from "../../newComponents/Generics/GenericHeader/file";
+import { SmallImage } from "../../newComponents/Clickables/icons/file";
 export default function RealtimeChatBox() {
   const context = useSelector((state: RootState) => state.context);
 
@@ -64,9 +66,13 @@ export default function RealtimeChatBox() {
   }, [socket, context.chatbox.chatboxId])
 
 
-  return (<div className="chatbox-container">
+  return (<div  className="chatbox-container">
 
-    <h2>{context.chatbox.receiverUsername}</h2>
+    
+    <Holder style={{padding:"var(--padding-medium)"}} direction="horizontal">
+      <SmallImage imgPath={context.chatbox.receiverProfilePicture}/>
+      <h1 style={{fontSize:"1.5rem"}}>{context.chatbox.receiverUsername}</h1>
+    </Holder>
 
     <div id="message-container" className="messages">
       {messages ? messages.map((value: any, index) => {
@@ -79,10 +85,10 @@ export default function RealtimeChatBox() {
       <div ref={messageDiv}></div>
     </div>
 
-    <Holder style={{ width: "95%",padding:"0px",alignSelf:"center", alignItems: "center", justifyContent: "center" }} classname="input-field-container" direction="horizontal">
-    =  <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)}  className='input' placeholder='Write Something...' />
+    <Holder  style={{backgroundColor:"var(--color-shadow)",gap:"var(--gap-medium)", width: "95%",padding:"var(--padding-medium)",borderRadius:"var(--radius-medium)",alignSelf:"center", alignItems: "center", justifyContent: "center" }} classname="input-field-container" direction="horizontal">
+      <textarea value={inputMessage} onChange={(e) => setInputMessage(e.target.value)}  className='input' placeholder='Write Something...' />
 
-      <BasicButton style={{ width: "fit-content" }} onClick={sendMessage} text="Send Message" />
+      <AccentButton style={{ width: "fit-content" }} onClick={sendMessage} text="Send Message" />
     </Holder>
 
 
