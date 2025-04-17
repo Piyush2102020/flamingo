@@ -50,7 +50,7 @@ export default function Chat() {
               classname="chip"
               imagePath={value.userData.profilePicture}
               headText={value.userData.username}
-              hintText={value?.lastMessage?.text}
+              hintText={value?.lastMessage?.text?value.lastMessage.text.slice(0,70)+"...":""}
               timestamp={value?.lastMessage?.createdAt}
               onClick={() => {
                 dispatch(updateChatboxMeta({

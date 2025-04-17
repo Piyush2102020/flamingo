@@ -32,7 +32,6 @@ export const GenericLazyLoader: React.FC<GenericLoaderConfig> = ({ url, Element,
         if (newItems.length == 0) {
             setHasMore(false);
         }
-        console.log("Items Received : ", newItems);
         setPage(prev => prev + 1);
         await setItems(oldItems => [...oldItems, ...newItems]);
         setIsLoading(false);
@@ -49,6 +48,8 @@ export const GenericLazyLoader: React.FC<GenericLoaderConfig> = ({ url, Element,
     useEffect(() => {
         loadItems();
     }, [])
+
+
     useEffect(() => {
         if (!hasMore || !observerRef.current) return;
 

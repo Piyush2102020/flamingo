@@ -1,20 +1,17 @@
-.image{
-    margin-right: 5px;
-}
+
 
 /* Messages */
 
 .base-message{
     
     padding: var(--padding-medium);
-    margin: var(--margin-medium);
+    margin: var(--margin-small);
     border-radius: var(--radius-medium);
 }
 
 
 .sender{
     align-self: flex-end;
-    width: 70%;
 }
 
 .receiver{

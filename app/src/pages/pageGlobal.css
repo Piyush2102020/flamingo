@@ -296,7 +296,7 @@ svg{
     border-radius: var(--radius-large);
     width: 50%;
     gap: var(--gap-medium);
-    background-color: var(--color-element);
+
 }
 
 .input-field:hover{

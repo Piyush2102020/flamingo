@@ -30,10 +30,10 @@ export default function Settings() {
                 headers: { "Content-Type": "multipart/form-data" },
             }) as any;
 
-
-            const newLocalData = { ...localData, profdilePicture: updateProfilePic.link };
-
-
+            console.log("Updated profile pic : ",updateProfilePic);
+            
+            const newLocalData = { ...localData, profilePicture: updateProfilePic.link };
+            console.log("New data : ",newLocalData);
             setLocalData(newLocalData);
             dispatch(addData(newLocalData));
         }

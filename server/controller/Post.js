@@ -170,7 +170,7 @@ exports.GetComments = async (req, res, next) => {
 
         const comments = await CommentModel.aggregate([
             filter,
-            { $sort: { createdAt: -1 } },
+            { $sort: { createdAt: parentId?1:-1 } },
             { $skip: skipCount },
             { $limit: limit },
             {
@@ -189,7 +189,7 @@ exports.GetComments = async (req, res, next) => {
                     }]
                 }
             }, { $unwind: { path: "$userData" } },
-            { $addFields: { likesCount: { $size: "$likes" } } },
+          
             {
                 $project: {
                     updatedAt: 0,

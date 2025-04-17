@@ -1,6 +1,9 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+
+console.log("Base Url : ",import.meta.env.VITE_BASE_URL);
+
 const axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     headers: { "Content-Type": "application/json" }
@@ -23,6 +26,7 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         if (error.response) {
+            
             const message = error.response.data?.message || "An error occurred";
 
             if (error.response.status === 401) {
