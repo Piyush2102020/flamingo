@@ -25,6 +25,7 @@ const slice = createSlice(
                 chatboxId: "",
                 receiverProfilePicture: ""
             },
+            pleaseWait:false,
         },
         reducers: {
             addData: (state, action: PayloadAction<{}>) => { state.userData = action.payload },
@@ -67,12 +68,13 @@ const slice = createSlice(
                     
                     state.chatbox[key]=action.payload[key]
                 }
-            }
-
+            },
+            togglePleaseWait:(state)=>{state.pleaseWait=!state.pleaseWait},
+            newComment:(state,newComment)=>{state.comment.comments=[newComment.payload,...state.comment.comments]}
         }
     }
 )
 
 
-export const { changeTheme,updateChatboxMeta,setCommentBoxHint, addComments, addData, setCommentBoxID, changeParentId, changeCommentInput, toggleCommentBox, setPostId, setParentId, toggleNotification, toggleMessage, setIsMobile, addUsersInInbox } = slice.actions;
+export const { newComment,togglePleaseWait,changeTheme,updateChatboxMeta,setCommentBoxHint, addComments, addData, setCommentBoxID, changeParentId, changeCommentInput, toggleCommentBox, setPostId, setParentId, toggleNotification, toggleMessage, setIsMobile, addUsersInInbox } = slice.actions;
 export default slice.reducer;

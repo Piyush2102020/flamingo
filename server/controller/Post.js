@@ -135,7 +135,7 @@ exports.AddComment = async (req, res, next) => {
         await newComment.save()
         const userId=await PostModel.findById(postId,{userId:1,media:1})
         Notify(userId.userId,'comment',postId,req.user._id,'post',userId.media,req.body.content)
-        response(res, "acknowledged")
+        response(res, "acknowledged",newComment)
 
     } catch (e) {
         next(e);

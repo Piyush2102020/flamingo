@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../../helpers/store"
 import React, { useState } from "react";
 import axiosInstance from "../../../helpers/axiosModified";
-import { addData } from "../../../helpers/slice";
+import { addData, togglePleaseWait } from "../../../helpers/slice";
 import { useNavigate } from "react-router-dom";
 import { MediumImage } from "../../../newComponents/Clickables/icons/file";
 import { TextHint } from "../../../newComponents/Generics/GenericText/file";
@@ -20,6 +20,7 @@ export default function Settings() {
 
 
     const handlePicChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(togglePleaseWait());
         if (event.target.files && event.target.files[0]) {
             const formData = new FormData();
             formData.append('image', event.target.files[0]);
@@ -35,13 +36,16 @@ export default function Settings() {
             setLocalData(newLocalData);
             dispatch(addData(newLocalData));
         }
+        dispatch(togglePleaseWait())
     };
 
     const updateProfile = async () => {
+        dispatch(togglePleaseWait())
         const updatedData = await axiosInstance.post('/updateprofile', localData) as any;
         console.log("Updated Data : ", updatedData);
         dispatch(addData(updatedData.newData));
         localStorage.setItem('token', updatedData.token);
+        dispatch(togglePleaseWait())
     }
 
     return (

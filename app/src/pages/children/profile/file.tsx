@@ -163,12 +163,7 @@ const handleAction = async () => {
                     component={
                         <ConditionalRendererWithDefault
                             condition={profileData._id}
-                            component={<GenericLazyLoader style={{ 
-                                display: "grid", 
-                                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", 
-                                gap: "1rem", 
-                                justifyContent: "center" 
-                              }}  url={memoizedUrl} Element={PostComponent} />}
+                            component={<GenericLazyLoader  url={memoizedUrl} Element={PostComponent} />}
                             defaultComponent="Loading Posts..." />
                     }
                     defaultComponent={

@@ -216,3 +216,46 @@ align-self: center;
     justify-content: space-between;
 }
 
+
+
+.loader-page{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    flex-direction: column;
+    position: fixed;
+    z-index: 200;
+    gap: var(--gap-medium);
+    background:rgba(0, 0, 0, 0.801)
+}
+
+.loader-wrapper {
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-medium);
+  padding: var(--padding-large);
+  border-radius:10px;
+  background-color: white;
+}
+
+.circular-loader {
+    width: 35px;
+    height: 35px;
+    border: 4px solid #e0e0e0;
+    border-top: 4px solid #1976d2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -31,6 +31,7 @@ export default function RealtimeChatBox() {
   useEffect(()=>{
     scrollToBottom();
   },[messages])
+
   const sendMessage=()=>{
     socket.emit("message",{
       senderId:context.userData._id,
@@ -38,6 +39,7 @@ export default function RealtimeChatBox() {
       text:inputMessage,
       chatboxId:context.chatbox.chatboxId
     });
+    setInputMessage("")
     }
 
     useEffect(()=>{

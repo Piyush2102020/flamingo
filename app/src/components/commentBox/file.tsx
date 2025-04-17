@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { addComments, changeCommentInput, changeParentId, setCommentBoxHint, toggleCommentBox } from '../../helpers/slice';
+import { addComments, changeCommentInput, changeParentId, newComment, setCommentBoxHint, toggleCommentBox } from '../../helpers/slice';
 import { RootState } from '../../helpers/store';
 import axiosInstance from '../../helpers/axiosModified';
 import { useEffect } from 'react';
@@ -13,6 +13,7 @@ import { TextHint } from '../../newComponents/Generics/GenericText/file';
 export default function CommentBox() {
   const disptach = useDispatch();
   const commentBoxState = useSelector((state: RootState) => state.context.comment);
+  const user = useSelector((state: RootState) => state.context.userData);
   const postId = commentBoxState.postId;
 
 
@@ -30,7 +31,18 @@ export default function CommentBox() {
 
   const addComment = async () => {
 
-    axiosInstance.post(`/content/${postId}/comments/${commentBoxState.parentId}`, { content: commentBoxState.input });
+    const response=await axiosInstance.post(`/content/${postId}/comments/${commentBoxState.parentId}`, { content: commentBoxState.input });
+    disptach(setCommentBoxHint(""));
+    disptach(changeCommentInput(""));
+    const newCommentToAdd={...response,userData:{
+      username:user.username,
+      name:user.name,
+      _id:user._id,
+      profilePicture:user.profilePicture
+    }};
+
+    console.log("New comment : ",newCommentToAdd);
+    disptach(newComment(newCommentToAdd));
   }
 
   return (
@@ -57,8 +69,6 @@ export default function CommentBox() {
             <BasicInputField onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
             <BasicButton onClick={addComment} text='Add Comment' />
           </Holder>
-
-
         </div>
       </div>
     </div>

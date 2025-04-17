@@ -1,14 +1,16 @@
 import  { useState } from "react";
 import axiosInstance from "../../helpers/axiosModified";
-import { changeCommentInput, setCommentBoxHint, setParentId } from "../../helpers/slice";
+import { changeCommentInput, setCommentBoxHint, setParentId, toggleCommentBox } from "../../helpers/slice";
 import { useDispatch } from "react-redux";
 import { Holder } from "../../newComponents/Generics/GenericHolders/file";
 import { GenericHeader } from "../../newComponents/Generics/GenericHeader/file";
 import { TextHint } from "../../newComponents/Generics/GenericText/file";
 import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
+import { useNavigate } from "react-router-dom";
 
 export default function CommentLayout({ item, onClick, isReply = false }: { item: any, onClick: () => void, isReply: boolean }) {
 
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const [replies, setReplies] = useState([]);
 
@@ -35,6 +37,9 @@ export default function CommentLayout({ item, onClick, isReply = false }: { item
         clickType="text"
         showIcon={false}
         content={item.content}
+        onClick={()=>{
+          dispatch(toggleCommentBox())
+          navigate(`/dashboard/profile?user=${item.userData.username}-${item.userData._id}`)}}
         timestamp={item.createdAt}
         component={<Holder>
           <Holder direction="horizontal">

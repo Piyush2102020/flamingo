@@ -13,12 +13,13 @@ import CommentBox from "../../components/commentBox/file";
 import startSocket from "../../helpers/socketServer";
 import Responsive from "../../helpers/responsive";
 import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
+import PleaseWait from "../../components/pnf/pleaseWait";
 
 export default function Dashboard() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const navbarRef = useRef<HTMLDivElement>(null);
-    const context = useSelector((state: RootState) => state.context) as any;
+    const context = useSelector((state: RootState) => state.context)as any;
 
     const [navbarHeight, setNavbarHeight] = useState(0);
 
@@ -98,10 +99,18 @@ export default function Dashboard() {
                 <ConditionalRendererWithoutDefault
                 condition={context.comment.isVisible}
                 component={<CommentBox />}
+
+                
+            /> 
+            <ConditionalRendererWithoutDefault
+            condition={context.pleaseWait
+            }
+            component={<PleaseWait/>}
             />
+           
             </div>
 
-            {/* Comment Box */}
+           
            
         </div>
     );

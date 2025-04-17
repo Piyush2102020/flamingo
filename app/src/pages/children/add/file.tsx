@@ -5,6 +5,8 @@ import { Holder } from '../../../newComponents/Generics/GenericHolders/file';
 import { AccentButton } from '../../../newComponents/Clickables/buttons/file';
 import { ConditionalRendererWithDefault } from '../../../newComponents/Generics/GenericConditionlRender/file';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { togglePleaseWait } from '../../../helpers/slice';
 
 export default function AddPost() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -13,6 +15,7 @@ export default function AddPost() {
     const [visibility, setVisibility] = useState("Public");
     const videoRef=useRef<HTMLVideoElement|null>(null);
     const [fileType, setFileType] = useState("image");
+    const dispatch=useDispatch();
     const handleFileInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
@@ -45,6 +48,7 @@ export default function AddPost() {
     
 
     const postButton = async () => {
+        dispatch(togglePleaseWait());
         const formData = new FormData();
         if (selectedFile) {
             formData.append('media', selectedFile);
@@ -62,6 +66,7 @@ export default function AddPost() {
         setText("");
         setSelectedFile(null);
         setPath("");
+        dispatch(togglePleaseWait());
     }
 
     return (
