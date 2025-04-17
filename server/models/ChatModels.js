@@ -26,7 +26,8 @@ const mongoose = require("mongoose");
 const ChatSchema = new mongoose.Schema({
   type: { type: String, enum: ["group", "personal"], default: "personal" },
   users: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }], 
-  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Messages" }]
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Messages" }],
+  lastMessage:{type:mongoose.Types.ObjectId,ref:"Messages"}
 }, { timestamps: true });
 
 ChatSchema.index({ users: 1 });

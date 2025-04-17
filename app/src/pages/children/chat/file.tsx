@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { addUsersInInbox, updateChatboxMeta} from "../../../helpers/slice";
 import { RootState } from "../../../helpers/store";
 import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/file";
+import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
 
 export default function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-  const inbox=useSelector((state:RootState)=>state.context.inbox);
+  const state=useSelector((state:RootState)=>state.context);
+  const inbox=state.inbox;
+  const isMobile=state.isMobile;
 
   const fetchChats = async () => {
     const allChats = await axiosInstance.get('/inbox') as any;
@@ -27,15 +28,26 @@ export default function Chat() {
     <div className="chatbox">
       <h1>Direct Messages</h1>
 
+      <Holder 
+      direction="horizontal"
+      style={{
+        display:"flex",
+        flexWrap:"wrap",
+        gap:"var(--gap-large)",
+        alignItems:"flex-start"
+      }}>
       {inbox.map((value:any,index)=>{
         return(
           <GenericHeader
+          
+          rightText=""
+          style={isMobile?{width:"100%"}:{width:"fit-content"}}
           key={index}
           classname="chip"
-          decorate={false}
           imagePath={value.userData.profilePicture}
           headText={value.userData.username}
-          hintText="Kaise hai bhai?"
+          hintText={value?.lastMessage?.text}
+          timestamp={value?.lastMessage?.createdAt}
           onClick={()=>{
             dispatch(updateChatboxMeta({
               receiverId:value.userId,
@@ -54,6 +66,9 @@ export default function Chat() {
         )
       })}
 
+      </Holder>
+
+     
     </div>
   )
 }
