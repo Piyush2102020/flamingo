@@ -60,14 +60,14 @@ export default function CommentBox() {
           }} item={value} />)}
         </div>
 
-        <div style={{ width: '70%',justifyContent:"center",alignItems:"center" }}>
+        <div style={{ width: '95%',justifyContent:"center",alignItems:"center" }}>
           <ConditionalRendererWithoutDefault
             condition={!!commentBoxState.hint.trim()}
             component={<TextHint text={commentBoxState.hint} />}
           />
-          <Holder classname='comment-box-input' direction='horizontal'>
-            <BasicInputField onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
-            <BasicButton onClick={addComment} text='Add Comment' />
+          <Holder style={{alignItems:"center"}} classname='comment-box-input' direction='horizontal'>
+            <BasicInputField style={{flexGrow:'1'}} onChange={(event) => disptach(changeCommentInput(event.target.value))} value={commentBoxState.input} placeholder='Write a comment' />
+            <BasicButton style={{width:"fit-content"}} onClick={addComment} text='Add Comment' />
           </Holder>
         </div>
       </div>

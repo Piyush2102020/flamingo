@@ -117,7 +117,7 @@ export default function AddPost() {
 
                 defaultComponent={
                     <div className='post-preview-wrapper'>
-                        <Holder >
+                        <Holder style={{width:"fit-content",padding:"var(--padding-small)"}} >
                             <div style={{ position: 'relative', width: 'fit-content' }}>
                                 <input
                                     id="fileUpload"
@@ -136,7 +136,7 @@ export default function AddPost() {
                                 />
 
                                
-                                <TextHint text='Tap to change' />
+                                <TextHint style={{textAlign:"center"}} text='Tap to change' />
                             </div>
 
                         </Holder>
@@ -145,19 +145,14 @@ export default function AddPost() {
 
                             <textarea onChange={(e) => setCaption(e.target.value)} className='input' placeholder='Write Something...' />
 
-                            <div style={{ width: '100%' }}>
-                                <h6>Mentions & Tags</h6>
-                                <textarea className='input' placeholder='@Mention your closer ones' />
-                            </div>
+    
 
-
-
-                            <div className='add-btn-holder'>
+                            {/* <div className='add-btn-holder'>
                                 <select onChange={(e) => setVisibility(e.target.value)} className='select'>
                                     <option className='select'>Public</option>
                                     <option className='select'>Private</option>
                                 </select>
-                            </div>
+                            </div> */}
 
                             <AccentButton onClick={createPost} text='Make a post' />
 
