@@ -165,6 +165,8 @@ exports.updateProfilePicture=async (req,res,next)=>{
 exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action,acctype}=req.query;
+    console.log(id);
+    
     if(action==='follow'){
         if(acctype=='public'){
             await UserModel.findByIdAndUpdate(id,{$push:{followers:req.user._id}});
@@ -178,7 +180,14 @@ exports.profileInteraction=async( req,res,next)=>{
         
     }else if(action=='removeRequest'){
         await UserModel.findByIdAndUpdate(id,{$pull:{requests:req.user._id}});
-    }else{
+    }
+    else if(action=='removeFollower'){
+        await UserModel.findByIdAndUpdate(id,{$pull:{following:req.user._id}});
+        await UserModel.findByIdAndUpdate(req.user._id,{$pull:{followers:id}});
+        response(res,"acknowledged");
+    
+    }
+    else{
         await UserModel.findByIdAndUpdate(id,{$pull:{followers:req.user._id}});
         await UserModel.findByIdAndUpdate(req.user._id,{$pull:{following:id}});
         response(res,"acknowledged");

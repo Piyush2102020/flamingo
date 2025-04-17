@@ -16,6 +16,7 @@ import RealtimeChatBox from "../components/realtimeChatbox/file";
 import Settings from "../pages/children/account_settings/file";
 import PostComponent from "../components/postComponent/file";
 import PostPreview from "../components/postComponent/postPreview";
+import FollowersTab from "../components/tabs/file";
 
 export default function Routes() {
     const routes = useRoutes([
@@ -43,6 +44,7 @@ export default function Routes() {
                 { path: "chatbox", element: <RealtimeChatBox/> },
                 { path: "notification" ,element:<Notifications/>},
                 {path:"settings",element:<Settings/>},
+                {path:'profile/:id/:type',element:<FollowersTab/>},
                 {path:"post/:id",element:<PostPreview/>}
             ]
         },

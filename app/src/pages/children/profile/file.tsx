@@ -59,11 +59,12 @@ const handleAction = async () => {
                 action = "follow";
                 nextState = { isRequested: true,isFollowing:false};
             }
-
+            console.log("New profile data : ",profileData);
+            
             await axiosInstance.put(`/profile/${_id}?action=${action}&acctype=private`);
         }
 
-        setProfileData(prev => ({ ...prev, ...nextState }));
+        setProfileData({ ...profileData, ...nextState} );
 
     } catch (err) {
         console.error("Follow/unfollow error:", err);
@@ -110,9 +111,9 @@ const handleAction = async () => {
                 <div className='meta'>
                     <div className='meta-item'><h4>{profileData.postCount}</h4> <span className='text-light'>Posts</span></div>
                     <div className='border'></div>
-                    <div className='meta-item'><h4>{profileData.followersCount} </h4><span className='text-light'>Followers</span></div>
+                    <div onClick={()=>navigate(`/dashboard/profile/${profileData._id}/followers`)} className='meta-item'><h4>{profileData.followersCount} </h4><span className='text-light'>Followers</span></div>
                     <div className='border'></div>
-                    <div className='meta-item'><h4>{profileData.followingCount}</h4> <span className='text-light'>Following</span></div>
+                    <div onClick={()=>navigate(`/dashboard/profile/${profileData._id}/following`)}  className='meta-item'><h4>{profileData.followingCount}</h4> <span className='text-light'>Following</span></div>
                 </div>
 
                 <ConditionalRendererWithDefault
