@@ -6,23 +6,26 @@ import { BasicInputField } from '../../../newComponents/Clickables/fields/file';
 import { Holder } from '../../../newComponents/Generics/GenericHolders/file';
 import { GenericHeader } from '../../../newComponents/Generics/GenericHeader/file';
 import { AccentButton } from '../../../newComponents/Clickables/buttons/file';
+import { ServerRoutes } from '../../../helpers/serverRoutes';
 
 
 
 export default function Search() {
+    // ------------------------------ State Variables ------------------------------
     const [query, setQuery] = useState('');
-    const [user, setUsers] = useState<[any]>([{}]);
+    const [users, setUsers] = useState<any[]>([]);
     const navigate = useNavigate();
 
+
+    // ------------------------------ Helper functions ------------------------------
     const search = async () => {
         setUsers([{}])
         if (query.trim()) {
-            const response = await axiosInstance.get(`/search/${query}`) as any;
+            const response = await axiosInstance.get( ServerRoutes.userRoutes.searchUsers(query)) as any[];
             setUsers(response)
         }
     }
     useEffect(() => {
-
         search();
     }, [query])
 
@@ -43,7 +46,7 @@ export default function Search() {
             
             <Holder classname='user-display'>
                 {query.trim()&&
-                user.map((value,index)=><GenericHeader
+                users.map((value,index)=><GenericHeader
                 style={{alignItems:"normal"}}
                 key={index}
                 clickType='header'

@@ -7,33 +7,41 @@ import { ConditionalRendererWithDefault } from '../../../newComponents/Generics/
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { togglePleaseWait } from '../../../helpers/slice';
+import { ServerRoutes } from '../../../helpers/serverRoutes';
 
 export default function AddPost() {
+
+
+    // ------------------------------ State Variables ------------------------------
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [filePath, setPath] = useState("");
-    const [text, setText] = useState("");
+    const [selectedFilePath, setSelectedFilePath] = useState("");
+    const [caption, setCaption] = useState("");
     const [visibility, setVisibility] = useState("Public");
     const videoRef=useRef<HTMLVideoElement|null>(null);
     const [fileType, setFileType] = useState("image");
     const dispatch=useDispatch();
+
+
+    // ------------------------------ Helper Functions ------------------------------
     const handleFileInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setSelectedFile(file);
             setFileType(file.type.startsWith('video/') ? 'video' : "image");
-            setPath(URL.createObjectURL(event.target.files[0]));
+            setSelectedFilePath(URL.createObjectURL(event.target.files[0]));
         }
     };
 
+    // ------------------------------ To check video length ------------------------------
     useEffect(() => {
         if (fileType === "video" && videoRef.current) {
             const video = videoRef.current;
-    
+
             const handleLoadedMetadata = () => {
                 if (video.duration > 30) {
                     setSelectedFile(null);
-                    setPath("");
-                    setText("");
+                    setSelectedFilePath("");
+                    setCaption("");
                     toast.error("Video can't be longer than 30 seconds");
                 }
             };
@@ -44,30 +52,37 @@ export default function AddPost() {
                 video.removeEventListener('loadedmetadata', handleLoadedMetadata);
             };
         }
-    }, [filePath, fileType]);
+    }, [selectedFilePath, fileType]);
     
 
-    const postButton = async () => {
+    // ------------------------------ Posting Button ------------------------------
+    const createPost = async () => {
         dispatch(togglePleaseWait());
+
         const formData = new FormData();
         if (selectedFile) {
             formData.append('media', selectedFile);
         }
-        formData.append('content', text);
-        // formData.append('tags',tags);
+
+        formData.append('content', caption);
         formData.append('visibility', visibility.toLowerCase());
 
-        await axiosInstance.post('/content', formData, {
+        await axiosInstance.post(ServerRoutes.postRoutes.content(), formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         });
 
-        setText("");
+        setCaption("");
         setSelectedFile(null);
-        setPath("");
+        setSelectedFilePath("");
         dispatch(togglePleaseWait());
     }
+
+
+
+
+
 
     return (
 
@@ -114,9 +129,9 @@ export default function AddPost() {
                                  <ConditionalRendererWithDefault
                                     condition={fileType == 'image'}
                                     component={
-                                        <img className='image-preview' src={filePath} />}
+                                        <img className='image-preview' src={selectedFilePath} />}
                                     defaultComponent={
-                                        <video ref={videoRef} loop={true} style={{width:"300px"}} autoPlay={true} src={filePath}/>
+                                        <video ref={videoRef} loop={true} style={{width:"300px"}} autoPlay={true} src={selectedFilePath}/>
                                     }
                                 />
 
@@ -128,7 +143,7 @@ export default function AddPost() {
 
                         <Holder classname='post-content'>
 
-                            <textarea onChange={(e) => setText(e.target.value)} className='input' placeholder='Write Something...' />
+                            <textarea onChange={(e) => setCaption(e.target.value)} className='input' placeholder='Write Something...' />
 
                             <div style={{ width: '100%' }}>
                                 <h6>Mentions & Tags</h6>
@@ -144,7 +159,7 @@ export default function AddPost() {
                                 </select>
                             </div>
 
-                            <AccentButton onClick={postButton} text='Make a post' />
+                            <AccentButton onClick={createPost} text='Make a post' />
 
 
                         </Holder>

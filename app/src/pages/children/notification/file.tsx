@@ -4,10 +4,10 @@ import { GenericHeader } from "../../../newComponents/Generics/GenericHeader/fil
 import { useSelector } from "react-redux";
 import { RootState } from "../../../helpers/store";
 import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
-import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from "../../../newComponents/Generics/GenericConditionlRender/file";
+import { ConditionalRendererWithoutDefault } from "../../../newComponents/Generics/GenericConditionlRender/file";
 import { AccentButton, BasicButton } from "../../../newComponents/Clickables/buttons/file";
 import { useNavigate } from "react-router-dom";
-import Header from "../../../components/header/file";
+import { ServerRoutes } from "../../../helpers/serverRoutes";
 export default function Notifications() {
     const [notifications, setNotification] = useState<[any] | null>(null);
     const [requests, setRequests] = useState<[]>([])
@@ -22,7 +22,7 @@ export default function Notifications() {
 
     useEffect(() => {
         loadNotification();
-        axiosInstance.get('/requests').then((data) => {
+        axiosInstance.get(ServerRoutes.userRoutes.requests()).then((data) => {
             setRequests(data.userRequests);
         }).catch(e => console.log(e));
     }, []);
@@ -50,7 +50,7 @@ export default function Notifications() {
         return template
     }
     const handleRequest = (action: string, id: string) => {
-        axiosInstance.post(`/requests/${action}?id=${id}`);
+        axiosInstance.post(ServerRoutes.userRoutes.requests(`${action}?id=${id}`));
     }
 
     return (

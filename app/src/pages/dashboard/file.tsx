@@ -16,15 +16,16 @@ import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/
 import PleaseWait from "../../components/pnf/pleaseWait";
 
 export default function Dashboard() {
+    // ------------------------------ State Variables ------------------------------
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const navbarRef = useRef<HTMLDivElement>(null);
     const context = useSelector((state: RootState) => state.context)as any;
-
     const [navbarHeight, setNavbarHeight] = useState(0);
 
-    Responsive();
 
+    // ------------------------------ Sockets and responsive hooks login check------------------------------
+    Responsive();
     useEffect(() => {
         if (!window.location.pathname.includes('home')) {
             navigate('home');
@@ -50,7 +51,6 @@ export default function Dashboard() {
             });
 
             resizeObserver.observe(navbarRef.current);
-
             return () => resizeObserver.disconnect();
         }
     }, [context.isMobile]);

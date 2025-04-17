@@ -9,10 +9,11 @@ import { TextHint } from "../../../newComponents/Generics/GenericText/file";
 import { BasicInputField } from "../../../newComponents/Clickables/fields/file";
 import { Holder } from "../../../newComponents/Generics/GenericHolders/file";
 import { AccentButton, BasicButton } from "../../../newComponents/Clickables/buttons/file";
+import { ServerRoutes } from "../../../helpers/serverRoutes";
 
 export default function Settings() {
 
-
+    // ------------------------------ State Variables ------------------------------
     const userData = useSelector((state: RootState) => state.context.userData) as any;
     const [localData, setLocalData] = useState(userData) as any;
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ export default function Settings() {
             const formData = new FormData();
             formData.append('image', event.target.files[0]);
 
-            const updateProfilePic = await axiosInstance.post('/updateprofilepicture', formData, {
+            const updateProfilePic = await axiosInstance.post(ServerRoutes.userRoutes.updateProfilePicture(), formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             }) as any;
 
@@ -41,8 +42,8 @@ export default function Settings() {
 
     const updateProfile = async () => {
         dispatch(togglePleaseWait())
-        const updatedData = await axiosInstance.post('/updateprofile', localData) as any;
-        console.log("Updated Data : ", updatedData);
+        
+        const updatedData = await axiosInstance.post(ServerRoutes.userRoutes.updateProfile(), localData) as any;
         dispatch(addData(updatedData.newData));
         localStorage.setItem('token', updatedData.token);
         dispatch(togglePleaseWait())

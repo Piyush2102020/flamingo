@@ -10,33 +10,35 @@ import { Holder } from '../../../newComponents/Generics/GenericHolders/file';
 import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from '../../../newComponents/Generics/GenericConditionlRender/file';
 import { AccentButton, BasicButton } from '../../../newComponents/Clickables/buttons/file';
 import { GenericLazyLoader } from '../../../newComponents/Generics/GenericLazyLoader/file';
+import { ServerRoutes } from '../../../helpers/serverRoutes';
 
 export default function Profile() {
+
+    // ------------------------------ State Variables ------------------------------
     const [params] = useSearchParams();
     const user = params.get('user');
     const userId = useMemo(() => user?.split("-")[1], [user]);
     const [profileData, setProfileData] = useState<any>({});
-
     const context = useSelector((state: RootState) => state.context) as any;
-
     const isOwnProfile = context.userData._id === userId;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+
+
+    // ------------------------------ Helpers ------------------------------
     const fetchUserData = async (userId: string) => {
-        const response = await axiosInstance.get(`/user/${userId}`);
-        console.log("User profile : ", response);
+        const response = await axiosInstance.get(ServerRoutes.userRoutes.userInfo(userId));
         setProfileData(response);
     }
 
     const memoizedUrl = useMemo(() => {
         if (!profileData._id) return "";
-        return `/content?type=user&uid=${profileData._id}`;
+        return ServerRoutes.postRoutes.content('',`?type=user&uid=${profileData._id}`);
     }, [profileData._id]);
 
-    const [isActionInProgress, setIsActionInProgress] = useState(false);
 
-const handleAction = async () => {
+    const handleAction = async () => {
 
     try {
         const { accountVisibility, isFollowing, isRequested, _id } = profileData;
@@ -46,7 +48,8 @@ const handleAction = async () => {
 
         if (accountVisibility === 'public') {
             action = isFollowing ? "unfollow" : "follow";
-            await axiosInstance.put(`/profile/${_id}?action=${action}&acctype=public`);
+            
+            await axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=public`));
             nextState = { isFollowing: !isFollowing };
         } else {
             if (isRequested) {
@@ -61,7 +64,7 @@ const handleAction = async () => {
             }
             console.log("New profile data : ",profileData);
             
-            await axiosInstance.put(`/profile/${_id}?action=${action}&acctype=private`);
+            await axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=public`));
         }
 
         setProfileData({ ...profileData, ...nextState} );

@@ -8,18 +8,17 @@ import { BasicInputField } from "../../newComponents/Clickables/fields/file";
 import { ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
 import { AccentButton } from "../../newComponents/Clickables/buttons/file";
 import { ClickablePara } from "../../newComponents/Clickables/text/file";
+import { AuthFormData } from "../../helpers/interfaces";
+import { ServerRoutes } from "../../helpers/serverRoutes";
 
 
 
-interface AuthFormData {
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-}
 
 export default function Auth() {
-    const [isLogin, setIsLogin] = useState(false);
+    // ------------------------------ State Variables Decleration ------------------------------
+
+    const navigate = useNavigate();
+    const [isLogin, setIsLogin] = useState<boolean>(false);
     const [formData, setData] = useState<AuthFormData>({
         name: "",
         email: "",
@@ -28,9 +27,11 @@ export default function Auth() {
     });
 
 
-    const navigate = useNavigate();
 
-    const handleChange = (element: React.ChangeEvent<HTMLInputElement>) => {
+    // ------------------------------ Helper functions for form submission and changes ------------------------------
+
+
+    const handleFormDataChange = (element: React.ChangeEvent<HTMLInputElement>) => {
         setData({ ...formData, [element.target.name]: element.target.value });
     };
 
@@ -38,12 +39,10 @@ export default function Auth() {
         return !value.trim();
     };
 
-    const handleSubmit = () => {
+    const handleFormSubmit = () => {
         let type = isLogin ? "login" : "create";
         const keys = Object.keys(formData) as (keyof AuthFormData)[];
-
         const requiredFields = isLogin ? ["email", "password"] : keys;
-
         for (let i = 0; i < requiredFields.length; i++) {
             if (isEmpty(formData[requiredFields[i] as keyof AuthFormData])) {
                 toast.error(`${requiredFields[i]} can't be empty`);
@@ -51,7 +50,7 @@ export default function Auth() {
             }
         }
 
-        axiosInstance.post(`/auth/${type}`, formData)
+        axiosInstance.post(ServerRoutes.auth.authentication(type), formData)
             .then((response: any) => {
                 localStorage.setItem("token", response.token);
                 setTimeout(() => {
@@ -64,30 +63,33 @@ export default function Auth() {
     const handleSuccess = (response: any) => {
         const token = response.credential;
         const userData = jwtDecode(token) as any;
-        setData(formData => ({...formData,email:userData.email,name:userData.name}))
+        setData(formData => ({ ...formData, email: userData.email, name: userData.name }))
 
     }
+
+
+    // ------------------------------ Return JSX ------------------------------
     return (
         <div className="auth-page">
             <div className="auth-form">
                 <h1 className="appname">{import.meta.env.VITE_APP_NAME}</h1>
                 <ConditionalRendererWithoutDefault condition={!isLogin} component={<>
-                        <BasicInputField name="name" onChange={handleChange} placeholder="Name" value={formData.name} />
-                        <BasicInputField name="username" onChange={handleChange} placeholder="Username" value={formData.username} />
-                    </>}/>
-        
-                <BasicInputField name="email" onChange={handleChange} placeholder="Email" value={formData.email} />
-                <BasicInputField  name="password" onChange={handleChange} placeholder="Password" value={formData.password} />
+                    <BasicInputField name="name" onChange={handleFormDataChange} placeholder="Name" value={formData.name} />
+                    <BasicInputField name="username" onChange={handleFormDataChange} placeholder="Username" value={formData.username} />
+                </>} />
+
+                <BasicInputField name="email" onChange={handleFormDataChange} placeholder="Email" value={formData.email} />
+                <BasicInputField name="password" onChange={handleFormDataChange} placeholder="Password" value={formData.password} />
 
                 <ConditionalRendererWithoutDefault condition={navigator.onLine} component={<GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
                     <GoogleLogin text={isLogin ? "continue_with" : "signup_with"} theme="outline" onSuccess={handleSuccess} onError={() => { toast.error("Oauth Error") }}></GoogleLogin>
                 </GoogleOAuthProvider>} />
 
-                <AccentButton onClick={handleSubmit} text={isLogin ? "Login" : "Create Account"} />
+                <AccentButton onClick={handleFormSubmit} text={isLogin ? "Login" : "Create Account"} />
 
-                <ClickablePara text={isLogin ? "No Account? Click here to create one" : "Already have an account? Login here"} onClick={() => setIsLogin(!isLogin)}/>
-                
-                <ConditionalRendererWithoutDefault condition={isLogin} component={ <span onClick={() => { navigate('/auth/forgetpassword') }} className="text-light" style={{ alignSelf: "flex-end" }}>Forgot Password?</span>}/>
+                <ClickablePara text={isLogin ? "No Account? Click here to create one" : "Already have an account? Login here"} onClick={() => setIsLogin(!isLogin)} />
+
+                <ConditionalRendererWithoutDefault condition={isLogin} component={<span onClick={() => { navigate('/auth/forgetpassword') }} className="text-light" style={{ alignSelf: "flex-end" }}>Forgot Password?</span>} />
 
             </div>
         </div>
