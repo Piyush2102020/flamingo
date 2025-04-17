@@ -17,16 +17,17 @@ type HeaderProps = {
     decorate?:boolean;
     children?: React.ReactNode;
     clickType: "header" | "text";
-    rightText:string;
+    rightText?:string;
     component?:React.ReactNode;
     onClick?: () => void;
+    iconClick?:()=>void
     content?:string;
 }
 
 
 
 export const GenericHeader: React.FC<HeaderProps> = ({ rightText=undefined,component,style,decorate=true,content, classname, imagePath, headText
-    , hintText,
+    , hintText,iconClick,
     onClick,
     timestamp, showIcon = true, children, clickType = 'header'
 }) => {
@@ -50,7 +51,7 @@ export const GenericHeader: React.FC<HeaderProps> = ({ rightText=undefined,compo
             {children}
             <ConditionalRendererWithoutDefault
             condition={showIcon}
-            component={ <SmallIcon icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            component={ <SmallIcon onClick={iconClick} icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
         </svg>} />}
             />

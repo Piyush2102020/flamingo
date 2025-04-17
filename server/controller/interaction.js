@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const ApiError = require("../helpers/ApiError");
 const { response } = require("../helpers/functions");
 const STATUS_CODES = require("../helpers/status_code");
@@ -29,10 +30,30 @@ exports.Interaction=async(req,res,next)=>{
 
             }else if(type=='remove'){
                 
+            }else{
+                await PostModel.findByIdAndUpdate(id,{$push:{reports:req.user._id}});
             }
             response(res,"Interacted") 
         }
     }catch(e){
         next(e);
+    }
+}
+
+
+
+exports.PostFunctions=async(req,res,next)=>{
+    try{
+        const {id}=req.params;
+
+        const post=await PostModel.findOne({_id:new mongoose.Types.ObjectId(id)});
+        if(post.userId.toString()===req.user._id){
+           await post.deleteOne();
+           response(res,"acknowledged");
+        }else{
+            throw new ApiError(STATUS_CODES.FORBIDDEN,"Action Prohibited");
+        }
+    }catch(e){
+next(e);
     }
 }

@@ -29,7 +29,8 @@ const postSchema = new mongoose.Schema({
     mediaType:{type:String,default:"image"},
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default: [], index: true }], 
     tags: [{ type: String, default: [], index: true }], 
-    visibility: { type: String, enum: ["public", "private", "friends"], default: "public", index: true } 
+    visibility: { type: String, enum: ["public", "private", "friends"], default: "public", index: true },
+    reports:[{type:String,default:[]}] 
 }, { 
     timestamps: true,
     toJSON: { virtuals: true },  

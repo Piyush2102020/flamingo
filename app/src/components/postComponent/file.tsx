@@ -1,25 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../../helpers/axiosModified";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addComments, setPostId, toggleCommentBox } from "../../helpers/slice";
 import { GenericHeader } from "../../newComponents/Generics/GenericHeader/file";
 import { useNavigate } from "react-router-dom";
 import { Holder } from "../../newComponents/Generics/GenericHolders/file";
 import { SmallIcon } from "../../newComponents/Clickables/icons/file";
 import { TextHint } from "../../newComponents/Generics/GenericText/file";
-import { ConditionalRendererWithDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
+import { ConditionalRendererWithDefault, ConditionalRendererWithoutDefault } from "../../newComponents/Generics/GenericConditionlRender/file";
+import { ShowOptions } from "../pnf/pleaseWait";
+import { RootState } from "../../helpers/store";
 
 export default function PostComponent({ item }: { item: any }) {
+    const userData=useSelector((state:RootState)=>state.context.userData)
     let [isLiked, setIsLiked] = useState<boolean>(item.isLiked);
     const [likes, setLikes] = useState<number>(item.likesCount);
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isMuted, setIsMuted] = useState(false);
+    const [options,showOptions]=useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const Interact = async (type: string) => {
-        console.log("Making request : ",`content/${item._id}/interact?type=${type}`);
-        
+        console.log("Making request : ", `content/${item._id}/interact?type=${type}`);
+
         await axiosInstance.post(`content/${item._id}/interact?type=${type}`);
     };
 
@@ -63,6 +67,7 @@ export default function PostComponent({ item }: { item: any }) {
     return (
         <div data-id={item._id} style={{ padding: "var(--padding-medium)" }} className="post-component">
             <GenericHeader
+            iconClick={()=>{showOptions(!options)}}
                 clickType="text"
                 headText={item.userData.username}
                 timestamp={item.createdAt}
@@ -100,6 +105,7 @@ export default function PostComponent({ item }: { item: any }) {
                         </button>
                     </Holder>
                 }
+
                 defaultComponent={<img className="post-image" src={item.media} />}
             />
             <div className="post-footer">
@@ -169,6 +175,11 @@ export default function PostComponent({ item }: { item: any }) {
 
                 </Holder>
             </div>
+
+            <ConditionalRendererWithoutDefault
+            condition={options}
+            component={<ShowOptions isUser={item.userData._id===userData._id} postId={item._id} cancelClick={()=>showOptions(!options)}/>}/>
+            
         </div>
     );
 }

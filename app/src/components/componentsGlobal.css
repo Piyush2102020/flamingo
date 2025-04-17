@@ -230,7 +230,7 @@ align-self: center;
     position: fixed;
     z-index: 200;
     gap: var(--gap-medium);
-    background:rgba(0, 0, 0, 0.801)
+    background:rgba(0, 0, 0, 0.562)
 }
 
 .loader-wrapper {

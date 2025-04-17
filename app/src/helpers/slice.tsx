@@ -26,6 +26,7 @@ const slice = createSlice(
                 receiverProfilePicture: ""
             },
             pleaseWait:false,
+            
         },
         reducers: {
             addData: (state, action: PayloadAction<{}>) => { state.userData = action.payload },
@@ -64,8 +65,6 @@ const slice = createSlice(
             updateChatboxMeta:(state,action)=>{
                 const keys=Object.keys(action.payload);
                 for (let key of keys){
-                    console.log(key);
-                    
                     state.chatbox[key]=action.payload[key]
                 }
             },
