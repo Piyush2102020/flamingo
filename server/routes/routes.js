@@ -69,7 +69,6 @@ routes.use(validator);
 
 
 
-/// 🔹 **User Routes**
 routes.get('/user/:id', userInfo);
 routes.get('/search/:username', searchUser);
 routes.route('/profile/:id').get(getAccData).put(profileInteraction);
@@ -78,19 +77,19 @@ routes.post('/updateprofilepicture',upload.single('image'), updateProfilePicture
 routes.get('/notification',Notifications)
 routes.route('/requests/:action?').get(getrequests).post(requestActions)
 
-/// 🔹 **Post Routes**
+
 routes.route('/content/:id?').get(RetrievePost).post(upload.single('media'), MakePost);
 routes.route('/content/:postId/comments/:parentId?').get(GetComments).post(AddComment);
 routes.post('/content/:id/interact', Interaction);
 routes.delete('/content/:id',PostFunctions);
 
-/// 🔹 **Chat Routes**
+
 routes.get('/inbox',getUsersInInbox);
 routes.get('/getmessages/:chatboxid',getOldMessage);
 
 
 routes.get('/music',SearchMusic)
-// Global Error Handler
+
 routes.use(errHandler);
 
 module.exports = routes;

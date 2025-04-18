@@ -165,7 +165,7 @@ exports.updateProfilePicture=async (req,res,next)=>{
 exports.profileInteraction=async( req,res,next)=>{
     const {id}=req.params;
     const {action,acctype}=req.query;
-    console.log(id);
+    console.log(id,action,acctype);
     
     if(action==='follow'){
         if(acctype=='public'){

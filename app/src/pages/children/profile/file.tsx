@@ -38,7 +38,7 @@ export default function Profile() {
     }, [profileData._id]);
 
 
-    const handleAction = async () => {
+    const handleAction = () => {
 
     try {
         const { accountVisibility, isFollowing, isRequested, _id } = profileData;
@@ -49,12 +49,13 @@ export default function Profile() {
         if (accountVisibility === 'public') {
             action = isFollowing ? "unfollow" : "follow";
             
-            await axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=public`));
+             axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=public`));
             nextState = { isFollowing: !isFollowing };
         } else {
+
             if (isRequested) {
                 action = "removeRequest";
-                nextState = { isRequested: false };
+                nextState = { isRequested: false,isFollowing:false}
             } else if (isFollowing) {
                 action = "unfollow";
                 nextState = { isFollowing: false ,isRequested:false};
@@ -62,12 +63,13 @@ export default function Profile() {
                 action = "follow";
                 nextState = { isRequested: true,isFollowing:false};
             }
-            console.log("New profile data : ",profileData);
-            
-            await axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=public`));
+       
+             axiosInstance.put(ServerRoutes.userRoutes.profile(`${_id}?action=${action}&acctype=private`));
         }
-
-        setProfileData({ ...profileData, ...nextState} );
+        const newData={ ...profileData, ...nextState};
+        console.log("New Data",newData);
+        
+        setProfileData(newData);
 
     } catch (err) {
         console.error("Follow/unfollow error:", err);
@@ -127,7 +129,9 @@ export default function Profile() {
                             onClick={handleAction}
                         
                             text={
-                                profileData.isFollowing?"Unfollow":profileData.isRequested?"Requested":"Follow"
+                               profileData.accountVisibility==='private'?
+                               profileData.isFollowing?"Unfollow":profileData.isRequested?"Requested":"Follow"
+                               :profileData.isFollowing?"Unfollow":"Follow"
                             }
                         />
 

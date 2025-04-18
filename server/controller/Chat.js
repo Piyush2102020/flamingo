@@ -86,6 +86,7 @@ exports.getUsersInInbox = async (req, res, next) => {
   }
 };
 
+
 /**
  * Used in the socket to add a message and emit it realtime to the corresponding user
  */

@@ -51,27 +51,36 @@ export default function Notifications() {
     }
     const handleRequest = (action: string, id: string) => {
         axiosInstance.post(ServerRoutes.userRoutes.requests(`${action}?id=${id}`));
+        setRequests(prev => prev.filter(req => req._id !== id));
     }
 
     return (
         <div>
-            <h1 style={{fontSize:"1.5rem",padding:"var(--padding-medium)"}}>Notifications</h1>
+            <h1 style={{ fontSize: "1.5rem", padding: "var(--padding-medium)" }}>Notifications</h1>
             <ConditionalRendererWithoutDefault
                 condition={context.userData.accountVisibility == 'private' && requests.length > 0}
-                component={<Holder>
-                    <h2>User Requests</h2>
-                    {requests.map((value: any, index) => <GenericHeader onClick={() => navigate(`/dashboard/profile?user=${value.username}-${value._id}`)} key={index} imagePath={value.profilePicture} clickType="text" headText={value.username} showIcon={false} decorate={false} hintText="wants to follow you">
-                        <AccentButton onClick={() => handleRequest('accept', value._id)} text="Accept" />
-                        <BasicButton onClick={() => handleRequest('reject', value._id)} text="Reject" />
-                    </GenericHeader>)}
+                component={<Holder style={{ padding: "var(--padding-medium)" }}>
+                    <h2 style={{ fontSize: "1rem" }}>User Requests</h2>
+                    {requests.map((value: any, index) =>
+                        <GenericHeader onClick={() => navigate(`/dashboard/profile?user=${value.username}-${value._id}`)}
+                            key={index} imagePath={value.profilePicture}
+                            clickType="text"
+                            headText={value.username}
+                            showIcon={false}
+                            decorate={false}
+                            hintText="wants to follow you">
+                            <AccentButton onClick={() => handleRequest('accept', value._id)} text="Accept" />
+                            <BasicButton onClick={() => handleRequest('reject', value._id)} text="Reject" />
+
+                        </GenericHeader>)}
                 </Holder>}
             />
             <Holder style={{ flexDirection: "column-reverse" }}>
                 {
                     notifications?.map((value: any, index) =>
-                        <Holder style={{gap:"var(--gap-medium)",padding:"var(--padding-small)"}} onClick={value.contentId?()=>navigate(`/dashboard/post/${value.contentId}`):undefined}>
+                        <Holder style={{ gap: "var(--gap-medium)", padding: "var(--padding-small)" }} onClick={value.contentId ? () => navigate(`/dashboard/post/${value.contentId}`) : undefined}>
                             <GenericHeader
-                                style={{padding:"var(--padding-small)",borderBottom:"1px solid var(--color-shadow)" }}
+                                style={{ padding: "var(--padding-small)", borderBottom: "1px solid var(--color-shadow)" }}
                                 key={index}
                                 headText={value.userData.username}
                                 clickType="text"
@@ -83,10 +92,10 @@ export default function Notifications() {
                                 showIcon={false}
                             >
 
-               
-                                {value.media&& <img style={{width:"var(--icon-medium)",height:"var(--icon-medium)"}} src={!value.media.includes('video')?value.media:'/icons/app_icon.png'}/>}
-                                
-                                
+
+                                {value.media && <img style={{ width: "var(--icon-medium)", height: "var(--icon-medium)" }} src={!value.media.includes('video') ? value.media : '/icons/app_icon.png'} />}
+
+
                             </GenericHeader>
                         </Holder>
                     )

@@ -4,6 +4,7 @@ const { response } = require("../helpers/functions");
 const STATUS_CODES = require("../helpers/status_code");
 const PostModel = require("../models/PostModel");
 const { Notify } = require("./Notifications");
+const UserModel = require("../models/UserModel");
 
 
 /**
@@ -49,6 +50,7 @@ exports.PostFunctions=async(req,res,next)=>{
         const post=await PostModel.findOne({_id:new mongoose.Types.ObjectId(id)});
         if(post.userId.toString()===req.user._id){
            await post.deleteOne();
+           UserModel.findByIdAndUpdate(req.user._id,{$inc:{postCount:-1}})
            response(res,"acknowledged");
         }else{
             throw new ApiError(STATUS_CODES.FORBIDDEN,"Action Prohibited");
